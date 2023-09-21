@@ -27,7 +27,6 @@ public class SoftwareController : ControllerBase
         var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters, shopId);
 
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
 
         var softwareDtoReturns =
             softwares.Select(softwareQuery => _mapper.Map<SoftwareDtos.SoftwareDtoReturn>(softwareQuery));
