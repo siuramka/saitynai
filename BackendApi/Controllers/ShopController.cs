@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BackendApi.Data.Dtos.Shop;
+using BackendApi.Data.Dtos.Software;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,29 @@ namespace BackendApi.Controllers;
 public class ShopController : ControllerBase
 {
     private IShopRepository _shopRepository;
+    private ISoftwareRepository _softwareRepository;
     private IMapper _mapper;
 
-    public ShopController(IShopRepository shopRepository, IMapper mapper)
+    public ShopController(IShopRepository shopRepository, IMapper mapper, ISoftwareRepository softwareRepository)
     {
+        _softwareRepository = softwareRepository;
         _mapper = mapper;
         _shopRepository = shopRepository;
     }
+    
+    [HttpGet("{shopId}/softwares",Name = "GetShopSoftwares")]
+    public async Task<IActionResult> GetAllSoftwares([FromQuery] SoftwareParameters softwareParameters, int shopId)
+    {
+        var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters, shopId);
 
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
+
+        var softwareDtoReturns =
+            softwares.Select(softwareQuery => _mapper.Map<SoftwareDtos.SoftwareDtoReturn>(softwareQuery));
+
+        return Ok(softwareDtoReturns);
+    }
+    
     // api/shops
     [HttpGet(Name = "GetShops")]
     [ProducesResponseType(200, Type = typeof(List<ShopDtos.ShopDtoReturn>))]

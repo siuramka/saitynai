@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace BackendApi.Controllers;
 
 [ApiController]
-[Route("api/shop/{shopId}/softwares")]
+[Route("api/softwares")]
 public class SoftwareController : ControllerBase
 {
     private ISoftwareRepository _softwareRepository;
@@ -22,9 +22,9 @@ public class SoftwareController : ControllerBase
     }
 
     [HttpGet(Name = "GetSoftwares")]
-    public async Task<IActionResult> GetAllPaging([FromQuery] SoftwareParameters softwareParameters, int shopId)
+    public async Task<IActionResult> GetAllPaging([FromQuery] SoftwareParameters softwareParameters)
     {
-        var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters, shopId);
+        var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters);
 
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
 
@@ -34,11 +34,11 @@ public class SoftwareController : ControllerBase
         return Ok(softwareDtoReturns);
     }
 
-    // api/shop/{shopId}/softwares/{softwareId}"
+    // api/softwares/{softwareId}"
     [HttpGet("{softwareId}", Name = "GetSoftware")]
-    public async Task<IActionResult> Get(int shopId, int softwareId)
+    public async Task<IActionResult> Get(int softwareId)
     {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(shopId, softwareId);
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId);
 
         if (software == null)
             return NotFound();
@@ -48,7 +48,7 @@ public class SoftwareController : ControllerBase
         return Ok(softwareReturnDto);
     }
     
-    // api/shop/{shopId}/softwares/{softwareId}"
+    // api/softwares"
     [HttpPost(Name = "CreateSoftware")]
     public async Task<IActionResult> Post(SoftwareDtos.SoftwareCreateDto softwareCreateDto, int shopId)
     {
@@ -68,9 +68,9 @@ public class SoftwareController : ControllerBase
     }
 
     [HttpPut("{softwareId}", Name = "UpdateSoftware")]
-    public async Task<IActionResult> Put(SoftwareDtos.SoftwareUpdateDto softwareUpdateDto, int shopId, int softwareId)
+    public async Task<IActionResult> Put(SoftwareDtos.SoftwareUpdateDto softwareUpdateDto, int softwareId)
     {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(shopId, softwareId);
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId);
 
         if (software == null)
         {
@@ -86,9 +86,9 @@ public class SoftwareController : ControllerBase
     }
 
     [HttpDelete("{softwareId}", Name = "DeleteSoftware")]
-    public async Task<IActionResult> Delete(int shopId, int softwareId)
+    public async Task<IActionResult> Delete(int softwareId)
     {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(shopId, softwareId);
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId);
 
         if (software == null)
         {
