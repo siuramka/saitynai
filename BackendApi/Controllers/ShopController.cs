@@ -23,18 +23,6 @@ public class ShopController : ControllerBase
         _shopRepository = shopRepository;
     }
     
-    [HttpGet("{shopId}/softwares",Name = "GetShopSoftwares")]
-    public async Task<IActionResult> GetAllSoftwares([FromQuery] SoftwareParameters softwareParameters, int shopId)
-    {
-        var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters, shopId);
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
-
-        var softwareDtoReturns =
-            softwares.Select(softwareQuery => _mapper.Map<SoftwareDtos.SoftwareDtoReturn>(softwareQuery));
-
-        return Ok(softwareDtoReturns);
-    }
     
     // api/shops
     [HttpGet(Name = "GetShops")]
@@ -100,6 +88,7 @@ public class ShopController : ControllerBase
         
         return Ok(shopReturnDto);
     }
+    
     [HttpDelete("{id}", Name = "DeleteShop")]
     public async Task<IActionResult> Delete(int id)
     {

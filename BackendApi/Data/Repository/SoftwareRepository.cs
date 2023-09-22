@@ -27,8 +27,8 @@ public class SoftwareRepository : RepositoryBase<Software>, ISoftwareRepository
         return await PagedList<Software>.CreateAsync(queryable, parameters.PageNumber, parameters.PageSize);
     }
 
-    public async Task<Software?> GetSoftwareByIdAsync(int softwareId)
+    public async Task<Software?> GetSoftwareByIdAsync(int softwareId, int shopId)
     {
-        return await FindByCondition(software => software.Id == softwareId).FirstOrDefaultAsync();
+        return await FindByCondition(software => software.Id == softwareId && software.ShopId == shopId).FirstOrDefaultAsync();
     }
 }

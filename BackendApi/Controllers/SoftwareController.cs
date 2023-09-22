@@ -1,44 +1,37 @@
 ﻿using AutoMapper;
 using BackendApi.Data.Dtos.Shop;
 using BackendApi.Data.Dtos.Software;
+using BackendApi.Data.Dtos.Subscription;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
+using BackendApi.Helpers.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace BackendApi.Controllers;
 
 [ApiController]
-[Route("api/softwares")]
+[Route("api/shops/{shopId}/softwares")]
 public class SoftwareController : ControllerBase
 {
     private ISoftwareRepository _softwareRepository;
+    private ISubscriptionRepository _subscriptionRepository;
+    private ISubscriptionService _subscriptionService;
+
     private IMapper _mapper;
 
-    public SoftwareController(ISoftwareRepository softwareRepository, IMapper mapper)
+    public SoftwareController(ISoftwareRepository softwareRepository, IMapper mapper, ISubscriptionService subscriptionService, ISubscriptionRepository subscriptionRepository)
     {
         _mapper = mapper;
+        _subscriptionRepository = subscriptionRepository;
+        _subscriptionService = subscriptionService;
         _softwareRepository = softwareRepository;
     }
-
-    [HttpGet(Name = "GetSoftwares")]
-    public async Task<IActionResult> GetAllPaging([FromQuery] SoftwareParameters softwareParameters)
+    
+    [HttpGet("{softwareId}",Name = "GetSoftware")]
+    public async Task<IActionResult> Get(int softwareId, int shopId)
     {
-        var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters);
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
-
-        var softwareDtoReturns =
-            softwares.Select(softwareQuery => _mapper.Map<SoftwareDtos.SoftwareDtoReturn>(softwareQuery));
-
-        return Ok(softwareDtoReturns);
-    }
-
-    // api/softwares/{softwareId}"
-    [HttpGet("{softwareId}", Name = "GetSoftware")]
-    public async Task<IActionResult> Get(int softwareId)
-    {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId);
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
 
         if (software == null)
             return NotFound();
@@ -47,14 +40,13 @@ public class SoftwareController : ControllerBase
 
         return Ok(softwareReturnDto);
     }
-    
-    // api/softwares"
+
     [HttpPost(Name = "CreateSoftware")]
     public async Task<IActionResult> Post(SoftwareDtos.SoftwareCreateDto softwareCreateDto, int shopId)
     {
         var software = _mapper.Map<Software>(softwareCreateDto);
         software.ShopId = shopId;
-
+        
         try
         {
             await _softwareRepository.CreateAsync(software);
@@ -63,14 +55,14 @@ public class SoftwareController : ControllerBase
         {
             return BadRequest();
         }
-
-        return Ok();
+        
+        return Ok(software);
     }
 
-    [HttpPut("{softwareId}", Name = "UpdateSoftware")]
-    public async Task<IActionResult> Put(SoftwareDtos.SoftwareUpdateDto softwareUpdateDto, int softwareId)
+    [HttpPut("{softwareId}",Name = "UpdateSoftware")]
+    public async Task<IActionResult> Put(SoftwareDtos.SoftwareUpdateDto softwareUpdateDto, int softwareId, int shopId)
     {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId);
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
 
         if (software == null)
         {
@@ -84,11 +76,24 @@ public class SoftwareController : ControllerBase
 
         return Ok(softwareDtoReturn);
     }
-
-    [HttpDelete("{softwareId}", Name = "DeleteSoftware")]
-    public async Task<IActionResult> Delete(int softwareId)
+    
+    [HttpGet(Name = "GetShopSoftwares")]
+    public async Task<IActionResult> GetAllSoftwares([FromQuery] SoftwareParameters softwareParameters, int shopId)
     {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId);
+        var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters, shopId);
+
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
+
+        var softwareDtoReturns =
+            softwares.Select(softwareQuery => _mapper.Map<SoftwareDtos.SoftwareDtoReturn>(softwareQuery));
+
+        return Ok(softwareDtoReturns);
+    }
+
+    [HttpDelete("{softwareId}",Name = "DeleteSoftware")]
+    public async Task<IActionResult> Delete(int softwareId, int shopId)
+    {
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
 
         if (software == null)
         {
