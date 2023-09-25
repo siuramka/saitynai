@@ -29,19 +29,14 @@ public class PagedList<T> : List<T>
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }
 
-    public object Metadata
-    {
-        get
+    public object Metadata =>
+        new
         {
-            return new
-            {
-                TotalCount,
-                PageSize,
-                CurrentPage,
-                TotalPages,
-                HasNext,
-                HasPrevious
-            };
-        }
-    }
+            TotalCount,
+            PageSize,
+            CurrentPage,
+            TotalPages,
+            HasNext,
+            HasPrevious
+        };
 }

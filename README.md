@@ -1,45 +1,37 @@
-Sprendžiamo uždavinio aprašymas
 ## Sistemos paskirtis
-Automatizavimo programų pardavimo portalas.
-Sistema skirta palengvinti Automatizavimo programų pardavimus. Pardavėjas gali sukurti
-parduotuvę ir sukurti joje parduodamas programas. Vartotojas gali užsisakyti prenumeratą šios
-programos.
+Automatizavimo programų pardavimo portalas. 
+
+Sistema skirta palengvinti Automatizavimo programų pardavimus. Pardavėjas gali sukurti parduotuvę ir sukurti joje parduodamas programas. Vartotojas gali užsisakyti prenumeratą šios programos.
+
 ## Funkciniai reikalavimai
 ## Svečias gali:
-    • Prisiregistruoti
-        o Kaip vartotojas
-        o Kaip pardavėjas
-    • Prisijungti
+    Prisiregistruti
+        Kaip vartotojas
+        Kaip pardavėjas
+    Prisijungti
 ## Pardavėjas gali:
-    • Sukurti parduotuvę:
-        o Įvesti pavadinimą
-        o Įvesti aprašymą
-        o Įvesti susisiekimo informaciją.
-            • Matyti savo parduotuves
-            • Sukurti parduodamą programą:
-        o Įvesti programos informaciją.
-            ▪ Pavadinimas
-            ▪ Aprašymas
-        o Įvesti internetinį puslapį kuriame parduodama programa veikia.
-        o Įvesti 1 mėnesio prenumeratos kainą. (gali buti ir nemokama)
-        o Parinkti prenumeratos laikotarpį
-        o Įvesti programos instaliavimo instrukcijas.
+    Sukurti parduotuvę
+    Sukurti pardudamą programą
+         Įvesti programos informaciją.
+    Matyti savo parduotuves
+    Matyti savo parduotuves programas
+
 ## Vartotojas gali:
-    o Matyti Parduotuves
-        ▪ Matyti parduotuvės skelbimus
-        ▪ Pasirinkti parduodamą programą
-        • Matyti pardavimo informaciją
-        • Matyti įvertinimą
-        • Prenumeruoti programą
-    o Matyti savo prenumeratas
-        ▪ Įvertinti programą
-        ▪ Atšaukti prenumeratą
-## Administratorius gali:
-    o Ištrinti įvertinimus
-    o Ištrinti parduodamą program
+     Matyti Parduotuves
+        Matyti parduotuvės parduodamas programas
+        Pasirinkti parduodamą programą
+                Prenumeruoti programą
+            Matyti pardavimo informaciją
+            Matyti įvertinimą
+     Matyti savo prenumeratas
+        Įvertinti programą
+        Atšaukti prenumeratą
 
-
-
+## Administratrius gali:
+     Matyti visus įvertinimus
+        Ištrinti įvertinimą
+     Matyti visas programas
+        Ištrinti pardudamą prgram
 
 ## Sistems architektūra
 

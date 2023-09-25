@@ -12,6 +12,5 @@ public partial class Software
     public int Id { get; set; }
     public int ShopId { get; set; }
     public Shop Shop { get; set; }
-    public ICollection<Subscription> Subscriptions { get; set; }
-    public ICollection<Rating> Ratings { get; set; }
+    public ICollection<Subscription> Subscriptions { get; set; } 
 }
