@@ -7,6 +7,11 @@ public class SubscriptionDtos
         DateTime End,
         double TotalPrice,
         bool IsCanceled);
+    public record SubscriptionUserDtoReturn(int Id, int TermInMonths, string Name,
+        DateTime Start,
+        DateTime End,
+        double TotalPrice,
+        bool IsCanceled);
     public record SubscriptionCreateDto(int TermInMonths);
     public record SubscriptionUpdateDto(int TermInMonths, bool IsCanceled);
 }

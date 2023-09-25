@@ -33,7 +33,7 @@ public class SubscriptionController : ControllerBase
         
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(subscriptions.Metadata));
         
-        var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionDtoReturn>(subscriptionQuery));
+        var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionUserDtoReturn>(subscriptionQuery));
 
         return Ok(subscriptionDtoReturns);
     }

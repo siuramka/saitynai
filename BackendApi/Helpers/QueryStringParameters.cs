@@ -16,4 +16,6 @@ public abstract class QueryStringParameters
             _pageSize = (value > maxPageSize) ? maxPageSize : value;
         }
     }
+
+    public string OrderBy { get; set; } = "";
 }

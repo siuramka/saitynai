@@ -3,6 +3,7 @@ using BackendApi.Data.Dtos.Shop;
 using BackendApi.Data.Dtos.Software;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
+using BackendApi.Helpers.Sorting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -13,16 +14,13 @@ namespace BackendApi.Controllers;
 public class ShopController : ControllerBase
 {
     private IShopRepository _shopRepository;
-    private ISoftwareRepository _softwareRepository;
     private IMapper _mapper;
 
-    public ShopController(IShopRepository shopRepository, IMapper mapper, ISoftwareRepository softwareRepository)
+    public ShopController(IShopRepository shopRepository, IMapper mapper)
     {
-        _softwareRepository = softwareRepository;
         _mapper = mapper;
         _shopRepository = shopRepository;
     }
-    
     
     // api/shops
     [HttpGet(Name = "GetShops")]

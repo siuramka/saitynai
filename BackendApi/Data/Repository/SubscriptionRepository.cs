@@ -14,8 +14,14 @@ public class SubscriptionRepository : RepositoryBase<Subscription>, ISubscriptio
 
     public async Task<PagedList<Subscription>> GetAllSubscriptionsPagedAsync(SubscriptionParameters subscriptionParameters, int shopId, int softwareId)
     {
-        var queryable = FindByCondition(x => x.SoftwareId == softwareId && x.Software.ShopId == shopId)
-            .Include(x => x.Software);
+        var queryable = FindByCondition(x => x.SoftwareId == softwareId && x.Software.ShopId == shopId);
+        
+        return await PagedList<Subscription>.CreateAsync(queryable, subscriptionParameters.PageNumber, subscriptionParameters.PageSize);
+    }
+
+    public async Task<PagedList<Subscription>> GetAllSubscriptionsPagedAsync(SubscriptionParameters subscriptionParameters, int userId)
+    {
+        var queryable = FindByCondition(x => x.ShopUserId == userId).Include(y => y.Software);
         
         return await PagedList<Subscription>.CreateAsync(queryable, subscriptionParameters.PageNumber, subscriptionParameters.PageSize);
     }

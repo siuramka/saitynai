@@ -1,4 +1,6 @@
-﻿namespace BackendApi.Data.Entities;
+﻿using BackendApi.Auth.Models;
+
+namespace BackendApi.Data.Entities;
 public partial class Subscription
 {
     public int TermInMonths { get; set; }
@@ -13,6 +15,6 @@ public partial class Subscription
     public int SoftwareId { get; set; }
     public Software Software { get; set; }
     
-    // public int ShopUserIdId { get; set; }
-    // public ShopUser ShopUser { get; set; }
+    public int ShopUserId { get; set; }
+    public ShopUser ShopUser { get; set; }
 }

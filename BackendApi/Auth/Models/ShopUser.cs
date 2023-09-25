@@ -1,4 +1,6 @@
-﻿namespace BackendApi.Auth.Models;
+﻿using BackendApi.Data.Entities;
+
+namespace BackendApi.Auth.Models;
 
 public partial class ShopUser //: IdentityUser
 {
@@ -7,6 +9,6 @@ public partial class ShopUser //: IdentityUser
 }
 public partial class ShopUser
 {
-    // public ICollection<Shop> Shops { get; set; }
-    // public ICollection<Subscription> Subscriptions { get; set; }
+    public ICollection<Shop> Shops { get; set; }
+    public ICollection<Subscription> Subscriptions { get; set; }
 }
