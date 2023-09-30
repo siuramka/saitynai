@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using BackendApi.Data.Dtos.Shop;
 using BackendApi.Data.Dtos.Software;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
 using BackendApi.Helpers.Sorting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 
 namespace BackendApi.Controllers;
@@ -15,7 +18,7 @@ public class ShopController : ControllerBase
 {
     private IShopRepository _shopRepository;
     private IMapper _mapper;
-
+    
     public ShopController(IShopRepository shopRepository, IMapper mapper)
     {
         _mapper = mapper;
@@ -51,6 +54,7 @@ public class ShopController : ControllerBase
         return Ok(shopDto);
     }
 
+    [Authorize]
     [HttpPost(Name = "CreateShop")]
     public async Task<IActionResult> Post(ShopDtos.ShopCreateDto shopCreateDto)
     {
@@ -58,6 +62,7 @@ public class ShopController : ControllerBase
 
         try
         {
+            shop.ShopUserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             await _shopRepository.CreateAsync(shop);
         }
         catch

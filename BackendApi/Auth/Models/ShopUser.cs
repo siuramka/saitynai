@@ -1,13 +1,9 @@
 ﻿using BackendApi.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace BackendApi.Auth.Models;
 
-public partial class ShopUser //: IdentityUser
-{
-    public int Id { get; set; }
-    public string Email { get; set; }
-}
-public partial class ShopUser
+public class ShopUser : IdentityUser
 {
     public ICollection<Shop> Shops { get; set; }
     public ICollection<Subscription> Subscriptions { get; set; }

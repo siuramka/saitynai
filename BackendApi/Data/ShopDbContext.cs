@@ -1,10 +1,11 @@
 ﻿using BackendApi.Auth.Models;
 using BackendApi.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi.Data;
 
-public class ShopDbContext : DbContext// IdentityDbContext<ShopUser>
+public class ShopDbContext : IdentityDbContext<ShopUser>
 {
     private readonly IConfiguration _configuration;
     
@@ -14,17 +15,19 @@ public class ShopDbContext : DbContext// IdentityDbContext<ShopUser>
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<Subscription>()
-        //     .HasOne(s => s.ShopUser)
-        //     .WithMany(u => u.Subscriptions)
-        //     .HasForeignKey(s => s.ShopUserIdId)
-        //     .OnDelete(DeleteBehavior.Restrict); // Specify NO ACTION
+        modelBuilder.Entity<Subscription>()
+            .HasOne(s => s.ShopUser)
+            .WithMany(u => u.Subscriptions)
+            .HasForeignKey(s => s.ShopUserId)
+            .OnDelete(DeleteBehavior.Restrict); // Specify NO ACTION
 
         modelBuilder.Entity<Software>()
             .HasOne(s => s.Shop)
             .WithMany(sh => sh.Softwares)
             .HasForeignKey(s => s.ShopId)
             .OnDelete(DeleteBehavior.Restrict); // Specify NO ACTION
+        
+        base.OnModelCreating(modelBuilder);
         
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

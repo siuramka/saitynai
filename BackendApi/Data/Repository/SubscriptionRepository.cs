@@ -21,7 +21,8 @@ public class SubscriptionRepository : RepositoryBase<Subscription>, ISubscriptio
 
     public async Task<PagedList<Subscription>> GetAllSubscriptionsPagedAsync(SubscriptionParameters subscriptionParameters, int userId)
     {
-        var queryable = FindByCondition(x => x.ShopUserId == userId).Include(y => y.Software);
+        string userIdString = userId.ToString();
+        var queryable = FindByCondition(x => x.ShopUserId == userIdString).Include(y => y.Software);
         
         return await PagedList<Subscription>.CreateAsync(queryable, subscriptionParameters.PageNumber, subscriptionParameters.PageSize);
     }

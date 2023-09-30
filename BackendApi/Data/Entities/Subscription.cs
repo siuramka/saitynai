@@ -9,12 +9,11 @@ public partial class Subscription
     public double TotalPrice { get; set; }
     public bool IsCanceled { get; set; } = false;
 }
-public partial class Subscription
+public partial class Subscription : IUserOwnedResource
 {
     public int Id { get; set; }
     public int SoftwareId { get; set; }
     public Software Software { get; set; }
-    
-    public int ShopUserId { get; set; }
+    public string ShopUserId { get; set; }
     public ShopUser ShopUser { get; set; }
 }
