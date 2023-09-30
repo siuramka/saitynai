@@ -32,7 +32,7 @@ public class ShopDbContext : DbContext// IdentityDbContext<ShopUser>
         optionsBuilder.UseSqlServer(_configuration.GetValue<string>("ConnectionString:DockerSqlServer"));
     }
     
-    public DbSet<ShopUser> ShopUsers { get; }
+    // public DbSet<ShopUser> ShopUsers { get; }
     public DbSet<Shop> Shops { get; }
     public DbSet<Software> Softwares { get; }
     public DbSet<Subscription> Subscriptions { get; }

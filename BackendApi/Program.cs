@@ -13,14 +13,13 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ShopDbContext>();
 builder.Services.AddTransient<IShopRepository, ShopRepository>();
 builder.Services.AddTransient<ISoftwareRepository, SoftwareRepository>();
 builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<ISortHelper<Shop>, SortHelper<Shop>>();
-
 
 var app = builder.Build();
 

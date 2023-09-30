@@ -26,29 +26,20 @@ public class SubscriptionController : ControllerBase
         _subscriptionRepository = subscriptionRepository;
     }
     
-    [HttpGet(Name = "GetSubscriptions")]
-    public async Task<IActionResult> GetAllPaging([FromQuery] SubscriptionParameters subscriptionParameters, int shopId, int softwareId)
+    [ApiExplorerSettings(IgnoreApi = true)] //swagger doesnt like this
+    [HttpGet(Name = "GetAllSubscriptionsPaging")]
+    [Route("/api/subscriptions")]
+    public async Task<IActionResult> GetAllPaging([FromQuery] SubscriptionParameters subscriptionParameters)
     {
-        var subscriptions = await _subscriptionRepository.GetAllSubscriptionsPagedAsync(subscriptionParameters, shopId, softwareId);
+        var subscriptions = await _subscriptionRepository.GetAllSubscriptionsPagedAsync(subscriptionParameters);
         
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(subscriptions.Metadata));
         
-        var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionUserDtoReturn>(subscriptionQuery));
-
+        var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionDtoReturn>(subscriptionQuery));
+    
         return Ok(subscriptionDtoReturns);
     }
     
-    // [HttpGet("cancelled",Name = "GetCancelledSubscriptions")]
-    // public async Task<IActionResult> GetAllCancelledPaging([FromQuery] SubscriptionParameters subscriptionParameters)
-    // {
-    //     var subscriptions = await _subscriptionRepository.GetAllSubscriptionsCancelledPagedAsync(subscriptionParameters);
-    //     
-    //     Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(subscriptions.Metadata));
-    //     
-    //     var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionDtoReturn>(subscriptionQuery));
-    //
-    //     return Ok(subscriptionDtoReturns);
-    // }
     
     [HttpGet("{subscriptionId}", Name = "GetSubscription")]
     public async Task<IActionResult> Get(int subscriptionId, int softwareId, int shopId)

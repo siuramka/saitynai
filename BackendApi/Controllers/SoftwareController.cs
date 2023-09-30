@@ -28,6 +28,20 @@ public class SoftwareController : ControllerBase
         _softwareRepository = softwareRepository;
     }
     
+    // [Route("/api/shops/softwares")]
+    // [HttpGet(Name = "GetAllSoftwares")]
+    // public async Task<IActionResult> GetAllSoftwares([FromQuery] SoftwareParameters softwareParameters)
+    // {
+    //     var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters);
+    //
+    //     Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(softwares.Metadata));
+    //
+    //     var softwareDtoReturns =
+    //         softwares.Select(softwareQuery => _mapper.Map<SoftwareDtos.SoftwareDtoReturn>(softwareQuery));
+    //
+    //     return Ok(softwareDtoReturns);
+    // }
+    
     [HttpGet("{softwareId}",Name = "GetSoftware")]
     public async Task<IActionResult> Get(int softwareId, int shopId)
     {
@@ -77,8 +91,8 @@ public class SoftwareController : ControllerBase
         return Ok(softwareDtoReturn);
     }
     
-    [HttpGet(Name = "GetShopSoftwares")]
-    public async Task<IActionResult> GetAllSoftwares([FromQuery] SoftwareParameters softwareParameters, int shopId)
+    [HttpGet(Name = "GetAllShopSoftwares")]
+    public async Task<IActionResult> GetAllShopSoftwares([FromQuery] SoftwareParameters softwareParameters, int shopId)
     {
         var softwares = await _softwareRepository.GetAllSoftwaresPagedAsync(softwareParameters, shopId);
 
