@@ -20,6 +20,8 @@ builder.Services.AddTransient<ISoftwareRepository, SoftwareRepository>();
 builder.Services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<ISortHelper<Shop>, SortHelper<Shop>>();
+builder.Services.AddScoped<ISortHelper<Software>, SortHelper<Software>>();
+builder.Services.AddScoped<ISortHelper<Subscription>, SortHelper<Subscription>>();
 
 var app = builder.Build();
 

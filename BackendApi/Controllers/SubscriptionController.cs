@@ -35,8 +35,7 @@ public class SubscriptionController : ControllerBase
         
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(subscriptions.Metadata));
         
-        var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionDtoReturn>(subscriptionQuery));
-    
+        var subscriptionDtoReturns = subscriptions.Select(subscriptionQuery => _mapper.Map<SubscriptionDtos.SubscriptionDtoReturnAll>(subscriptionQuery));
         return Ok(subscriptionDtoReturns);
     }
     
@@ -98,7 +97,7 @@ public class SubscriptionController : ControllerBase
         
         var subscriptionDtoReturn = _mapper.Map<SubscriptionDtos.SubscriptionDtoReturn>(subscription);
         
-        return Ok(subscriptionDtoReturn);
+        return CreatedAtAction(nameof(Post),subscriptionDtoReturn);
     }
     
     [HttpDelete("{subscriptionId}", Name = "DeleteSubscription")]

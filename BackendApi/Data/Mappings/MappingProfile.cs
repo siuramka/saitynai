@@ -15,10 +15,12 @@ public class MappingProfile : Profile
         CreateMap<ShopDtos.ShopUpdateDto, Shop>();
 
         CreateMap<Software, SoftwareDtos.SoftwareDtoReturn>();
+        CreateMap<Software, SoftwareDtos.SoftwareDtoReturnAll>();
         CreateMap<SoftwareDtos.SoftwareCreateDto, Software>();
         CreateMap<SoftwareDtos.SoftwareUpdateDto, Software>();
         
         CreateMap<Subscription, SubscriptionDtos.SubscriptionDtoReturn>();
+        CreateMap<Subscription, SubscriptionDtos.SubscriptionDtoReturnAll>();
         CreateMap<SubscriptionDtos.SubscriptionCreateDto, Subscription>();
         CreateMap<SubscriptionDtos.SubscriptionUpdateDto, Subscription>();
     }

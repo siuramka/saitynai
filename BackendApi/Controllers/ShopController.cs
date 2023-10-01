@@ -47,8 +47,8 @@ public class ShopController : ControllerBase
         if (shop == null)
             return NotFound();
 
-        var shopDto = new ShopDtos.ShopDtoReturn(shop.Id, shop.Name, shop.Description, shop.ContactInformation);
-        return Ok(shopDto);
+        var shopReturnDto = _mapper.Map<ShopDtos.ShopDtoReturn>(shop);
+        return Ok(shopReturnDto);
     }
 
     [HttpPost(Name = "CreateShop")]
@@ -65,7 +65,7 @@ public class ShopController : ControllerBase
             return BadRequest();
         }
 
-        return Ok();
+        return CreatedAtAction(nameof(Post),shop);
     }
 
     // api/shops/{id}
