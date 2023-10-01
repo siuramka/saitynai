@@ -9,29 +9,31 @@ Sistema skirta palengvinti Automatizavimo programų pardavimus. Pardavėjas gali
         Kaip vartotojas
         Kaip pardavėjas
     Prisijungti
-## Pardavėjas gali:
-    Sukurti parduotuvę
-    Sukurti pardudamą programą
-         Įvesti programos informaciją.
-    Matyti savo parduotuves
-    Matyti savo parduotuves programas
+Pardavėjas gali:
+    • Sukurti parduotuvę
+    • Sukurti pardudamą programą
+        o Programa gali būti ir nemokama
+    • Matyti savo parduotuves
+    • Matyti savo parduotuvės programas
+    • Redaguoti programą
+    • Redaguoti parduotuvę
 
-## Vartotojas gali:
-     Matyti Parduotuves
-        Matyti parduotuvės parduodamas programas
-        Pasirinkti parduodamą programą
-                Prenumeruoti programą
-            Matyti pardavimo informaciją
-            Matyti įvertinimą
-     Matyti savo prenumeratas
-        Įvertinti programą
-        Atšaukti prenumeratą
+Vartotojas gali:
+    • Matyti visas parduotuves
+    • Matyti parduotuvės parduodamas programas
+    • Pasirinkti parduodamą program
+        o Prenumeruoti programą
+    • Matyti savo prenumeratas
+        o Redaguoti prenumeratą
+    ▪ Keisti terminą
+    ▪ Atšaukti prenumeratą
 
-## Administratrius gali:
-     Matyti visus įvertinimus
-        Ištrinti įvertinimą
-     Matyti visas programas
-        Ištrinti pardudamą prgram
+Administratrius gali:
+• Matyti visas programas
+    o Ištrinti programą
+• Matyti visas parduotuves
+    o Ištrinti parduotuvę
+    o Redaguoti parduotuvę
 
 ## Sistems architektūra
 
