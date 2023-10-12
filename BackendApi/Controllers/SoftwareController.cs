@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace BackendApi.Controllers;
 
 [ApiController]
-[Route("api/shops/{shopId}/softwares")]
+[Route("api/shops/{shopId:int}/softwares")]
 public class SoftwareController : ControllerBase
 {
     private ISoftwareRepository _softwareRepository;
@@ -55,7 +55,7 @@ public class SoftwareController : ControllerBase
         return Ok(softwareDtoReturns);
     }
     
-    [HttpGet("{softwareId}",Name = "GetSoftware")]
+    [HttpGet("{softwareId:int}",Name = "GetSoftware")]
     public async Task<IActionResult> Get(int softwareId, int shopId)
     {
         var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
@@ -87,7 +87,7 @@ public class SoftwareController : ControllerBase
         return CreatedAtAction(nameof(Post), softwareDtoReturn);
     }
 
-    [HttpPut("{softwareId}",Name = "UpdateSoftware")]
+    [HttpPut("{softwareId:int}",Name = "UpdateSoftware")]
     public async Task<IActionResult> Put(SoftwareDtos.SoftwareUpdateDto softwareUpdateDto, int softwareId, int shopId)
     {
         var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
@@ -106,7 +106,7 @@ public class SoftwareController : ControllerBase
     }
     
 
-    [HttpDelete("{softwareId}",Name = "DeleteSoftware")]
+    [HttpDelete("{softwareId:int}",Name = "DeleteSoftware")]
     public async Task<IActionResult> Delete(int softwareId, int shopId)
     {
         var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);

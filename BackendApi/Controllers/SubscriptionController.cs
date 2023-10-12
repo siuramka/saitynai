@@ -10,10 +10,9 @@ using Newtonsoft.Json;
 namespace BackendApi.Controllers;
 
 [ApiController]
-[Route("api/shops/{shopId}/softwares/{softwareId}/subscriptions")]
+[Route("api/shops/{shopId:int}/softwares/{softwareId:int}/subscriptions")]
 public class SubscriptionController : ControllerBase
 {
-
     private ISubscriptionRepository _subscriptionRepository;
     private ISubscriptionService _subscriptionService;
     private ISoftwareRepository _softwareRepository;
@@ -40,7 +39,7 @@ public class SubscriptionController : ControllerBase
     }
     
     
-    [HttpGet("{subscriptionId}", Name = "GetSubscription")]
+    [HttpGet("{subscriptionId:int}", Name = "GetSubscription")]
     public async Task<IActionResult> Get(int subscriptionId, int softwareId, int shopId)
     {
         var subscription = await _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
@@ -55,17 +54,20 @@ public class SubscriptionController : ControllerBase
         return Ok(subscriptionReturnDto);
     }
     
-    [HttpPut("{subscriptionId}", Name = "UpdateSubscription")]
+    [HttpPut("{subscriptionId:int}", Name = "UpdateSubscription")]
     public async Task<IActionResult> Put(SubscriptionDtos.SubscriptionUpdateDto subscriptionUpdateDto, int subscriptionId, int softwareId, int shopId)
     {
         var subscription = await _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
-    
-        if (subscription == null)
+        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
+
+        if (subscription == null || software == null)
         {
             return NotFound();
         }
     
-        _mapper.Map(subscriptionUpdateDto, subscription);
+        var subscriptionWithTerms = await _subscriptionService.UpdateSubscription(subscriptionUpdateDto, subscription, software);
+
+        _mapper.Map(subscriptionWithTerms, subscription);
         await _subscriptionRepository.UpdateAsync(subscription);
     
         var softwareDtoReturn = _mapper.Map<SubscriptionDtos.SubscriptionUpdateDto>(subscriptionUpdateDto);
@@ -100,7 +102,7 @@ public class SubscriptionController : ControllerBase
         return CreatedAtAction(nameof(Post),subscriptionDtoReturn);
     }
     
-    [HttpDelete("{subscriptionId}", Name = "DeleteSubscription")]
+    [HttpDelete("{subscriptionId:int}", Name = "DeleteSubscription")]
     public async Task<IActionResult> Delete(int subscriptionId, int shopId, int softwareId)
     {
         var subscription = await _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);

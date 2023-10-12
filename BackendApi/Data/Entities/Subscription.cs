@@ -1,4 +1,5 @@
-﻿using BackendApi.Auth.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using BackendApi.Auth.Models;
 
 namespace BackendApi.Data.Entities;
 public partial class Subscription

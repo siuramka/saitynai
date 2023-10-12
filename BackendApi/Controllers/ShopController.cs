@@ -37,7 +37,7 @@ public class ShopController : ControllerBase
     }
 
     // api/shops/{id}
-    [HttpGet("{id}", Name = "GetShop")]
+    [HttpGet("{id:int}", Name = "GetShop")]
     [ProducesResponseType(404)]
     [ProducesResponseType(200, Type = typeof(ShopDtos.ShopDtoReturn))]
     public async Task<IActionResult> Get(int id)
@@ -64,12 +64,13 @@ public class ShopController : ControllerBase
         {
             return BadRequest();
         }
+        var shopResponse = _mapper.Map<ShopDtos.ShopDtoReturn>(shop);
 
-        return CreatedAtAction(nameof(Post),shop);
+        return CreatedAtAction(nameof(Post),shopResponse);
     }
 
     // api/shops/{id}
-    [HttpPut("{id}", Name = "UpdateShop")]
+    [HttpPut("{id:int}", Name = "UpdateShop")]
     public async Task<IActionResult> Put(ShopDtos.ShopUpdateDto shopUpdateDto, int id)
     {
         var shop = await _shopRepository.GetShopByIdAsync(id);
@@ -87,7 +88,7 @@ public class ShopController : ControllerBase
         return Ok(shopReturnDto);
     }
     
-    [HttpDelete("{id}", Name = "DeleteShop")]
+    [HttpDelete("{id:int}", Name = "DeleteShop")]
     public async Task<IActionResult> Delete(int id)
     {
         var shop = await _shopRepository.GetShopByIdAsync(id);

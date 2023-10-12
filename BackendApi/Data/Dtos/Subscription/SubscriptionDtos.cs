@@ -19,8 +19,5 @@ public class SubscriptionDtos
     public record SubscriptionCreateDto(int TermInMonths);
 
     public record SubscriptionUpdateDto(int TermInMonths,
-        DateTime Start,
-        DateTime End,
-        double TotalPrice,
         bool IsCanceled);
 }

@@ -27,4 +27,17 @@ public class SubscriptionService : ISubscriptionService
         
         return subscriptionWithTerms;
     }
+
+    public async Task<Subscription> UpdateSubscription(SubscriptionDtos.SubscriptionUpdateDto subscriptionUpdateDto, Subscription subscription, Software software)
+    {
+        Subscription subscriptionWithTerms = subscription;
+
+        subscription.End = DateTime.Now.AddMonths(subscriptionUpdateDto.TermInMonths);
+
+        subscriptionWithTerms.TotalPrice += software.PriceMonthly * subscriptionUpdateDto.TermInMonths;
+
+        subscriptionWithTerms.SoftwareId = software.Id;
+        
+        return subscriptionWithTerms;
+    }
 }

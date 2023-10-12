@@ -7,5 +7,7 @@ public interface ISubscriptionService
 {
     public Task<Subscription> GetSubscriptionWithTerms(SubscriptionDtos.SubscriptionCreateDto subscriptionCreateDto,
         Subscription subscription, Software software);
+    public Task<Subscription> UpdateSubscription(SubscriptionDtos.SubscriptionUpdateDto subscriptionUpdateDto,
+        Subscription subscription, Software software);
     
 }
