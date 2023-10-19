@@ -1,28 +1,31 @@
 ﻿using AutoMapper;
+using BackendApi.Auth.Models;
 using BackendApi.Data.Dtos.Software;
 using BackendApi.Data.Dtos.Subscription;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
 using BackendApi.Helpers.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace BackendApi.Controllers;
 
 [ApiController]
+[Authorize(Roles = ShopUserRoles.ShopUser)]
 [Route("api/shops/{shopId:int}/softwares/{softwareId:int}/subscriptions")]
-public class SubscriptionController : ControllerBase
+public class SubscriptionController : ControllerBaseWithUserId
 {
-    private ISubscriptionRepository _subscriptionRepository;
+    private IRepositoryManager _repositoryManager;
     private ISubscriptionService _subscriptionService;
-    private ISoftwareRepository _softwareRepository;
+    private IAuthorizationService _authorizationService;
     private IMapper _mapper; 
-    public SubscriptionController(ISubscriptionRepository subscriptionRepository, IMapper mapper, ISubscriptionService subscriptionService, ISoftwareRepository softwareRepository)
+    public SubscriptionController(IRepositoryManager repositoryManager, IAuthorizationService authorizationService, IMapper mapper, ISubscriptionService subscriptionService)
     {
         _mapper = mapper;
-        _softwareRepository = softwareRepository;
+        _repositoryManager = repositoryManager;
         _subscriptionService = subscriptionService;
-        _subscriptionRepository = subscriptionRepository;
+        _authorizationService = authorizationService;
     }
     
     [ApiExplorerSettings(IgnoreApi = true)] //swagger doesnt like this
@@ -30,7 +33,7 @@ public class SubscriptionController : ControllerBase
     [Route("/api/subscriptions")]
     public async Task<IActionResult> GetAllPaging([FromQuery] SubscriptionParameters subscriptionParameters)
     {
-        var subscriptions = await _subscriptionRepository.GetAllSubscriptionsPagedAsync(subscriptionParameters);
+        var subscriptions = await _repositoryManager.Subscriptions.GetAllSubscriptionsPagedAsync(subscriptionParameters, UserId);
         
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(subscriptions.Metadata));
         
@@ -38,12 +41,17 @@ public class SubscriptionController : ControllerBase
         return Ok(subscriptionDtoReturns);
     }
     
-    
     [HttpGet("{subscriptionId:int}", Name = "GetSubscription")]
     public async Task<IActionResult> Get(int subscriptionId, int softwareId, int shopId)
     {
-        var subscription = await _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
-
+        var subscription = await _repositoryManager.Subscriptions.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, subscription, PolicyNames.ResourceOwner);
+            
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
+        
         if (subscription == null)
         {
             return NotFound();
@@ -57,8 +65,15 @@ public class SubscriptionController : ControllerBase
     [HttpPut("{subscriptionId:int}", Name = "UpdateSubscription")]
     public async Task<IActionResult> Put(SubscriptionDtos.SubscriptionUpdateDto subscriptionUpdateDto, int subscriptionId, int softwareId, int shopId)
     {
-        var subscription = await _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
-        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
+        var subscription = await _repositoryManager.Subscriptions.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
+        var software = await _repositoryManager.Softwares.GetSoftwareByIdAsync(softwareId, shopId);
+        
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, subscription, PolicyNames.ResourceOwner);
+            
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
 
         if (subscription == null || software == null)
         {
@@ -68,7 +83,8 @@ public class SubscriptionController : ControllerBase
         var subscriptionWithTerms = await _subscriptionService.UpdateSubscription(subscriptionUpdateDto, subscription, software);
 
         _mapper.Map(subscriptionWithTerms, subscription);
-        await _subscriptionRepository.UpdateAsync(subscription);
+        _repositoryManager.Subscriptions.Update(subscription);
+        await _repositoryManager.SaveAsync();
     
         var softwareDtoReturn = _mapper.Map<SubscriptionDtos.SubscriptionUpdateDto>(subscriptionUpdateDto);
     
@@ -78,7 +94,7 @@ public class SubscriptionController : ControllerBase
     [HttpPost(Name = "CreateSubscription")]
     public async Task<IActionResult> Post(SubscriptionDtos.SubscriptionCreateDto subscriptionCreateDto, int softwareId, int shopId)
     {
-        var software = await _softwareRepository.GetSoftwareByIdAsync(softwareId, shopId);
+        var software = await _repositoryManager.Softwares.GetSoftwareByIdAsync(softwareId, shopId);
         
         if (software == null)
         {
@@ -90,7 +106,9 @@ public class SubscriptionController : ControllerBase
 
         try
         {
-            await _subscriptionRepository.CreateAsync(subscriptionWithTerms);
+            subscriptionWithTerms.ShopUserId = UserId;
+            _repositoryManager.Subscriptions.Create(subscriptionWithTerms);
+            await _repositoryManager.SaveAsync();
         }
         catch
         {
@@ -105,14 +123,22 @@ public class SubscriptionController : ControllerBase
     [HttpDelete("{subscriptionId:int}", Name = "DeleteSubscription")]
     public async Task<IActionResult> Delete(int subscriptionId, int shopId, int softwareId)
     {
-        var subscription = await _subscriptionRepository.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
+        var subscription = await _repositoryManager.Subscriptions.GetSubscriptionByIdAsync(subscriptionId, shopId, softwareId);
+        
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, subscription, PolicyNames.ResourceOwner);
+            
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
+        
         if (subscription == null)
         {
             return NotFound();
         }
     
-        await _subscriptionRepository.DeleteAsync(subscription);
-    
+        _repositoryManager.Subscriptions.Delete(subscription);
+        await _repositoryManager.SaveAsync();
         return NoContent();
     }
 }

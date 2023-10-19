@@ -1,6 +1,7 @@
 ﻿using BackendApi.Data.Dtos.Subscription;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
+using BackendApi.Data.Repository.Extensions;
 using BackendApi.Helpers;
 using BackendApi.Helpers.Sorting;
 using Microsoft.EntityFrameworkCore;
@@ -9,33 +10,35 @@ namespace BackendApi.Data.Repository;
 
 public class SubscriptionRepository : RepositoryBase<Subscription>, ISubscriptionRepository
 {
-    private ISortHelper<Subscription> _sortHelper;
 
-    public SubscriptionRepository(ShopDbContext shopDbContext, ISortHelper<Subscription> sortHelper) : base(shopDbContext)
+    public SubscriptionRepository(ShopDbContext shopDbContext) : base(shopDbContext)
     {
-        _sortHelper = sortHelper;
     }
 
     public async Task<PagedList<Subscription>> GetAllSubscriptionsPagedAsync(SubscriptionParameters subscriptionParameters, int shopId, int softwareId)
     {
-        var queryable = FindByCondition(x => x.SoftwareId == softwareId && x.Software.ShopId == shopId).Include(y => y.Software).ThenInclude(y => y.Shop);
-        var queryableSorted = _sortHelper.ApplySort(queryable, subscriptionParameters.OrderBy);
+        var queryableSorted = FindByCondition(x => x.SoftwareId == softwareId && x.Software.ShopId == shopId).Include(y => y.Software).ThenInclude(y => y.Shop).Sort(subscriptionParameters.OrderBy);
 
         return await PagedList<Subscription>.CreateAsync(queryableSorted, subscriptionParameters.PageNumber, subscriptionParameters.PageSize);
     }
 
     public async Task<PagedList<Subscription>> GetAllSubscriptionsPagedAsync(SubscriptionParameters subscriptionParameters)
     {
-        var queryable = FindAll().Include(y => y.Software).ThenInclude(y => y.Shop);
-        var queryableSorted = _sortHelper.ApplySort(queryable, subscriptionParameters.OrderBy);
+        var queryableSorted = FindAll().Include(y => y.Software).ThenInclude(y => y.Shop).Sort(subscriptionParameters.OrderBy);
 
         return await PagedList<Subscription>.CreateAsync(queryableSorted, subscriptionParameters.PageNumber, subscriptionParameters.PageSize);
     }
-    
+
+    public async Task<PagedList<Subscription>> GetAllSubscriptionsPagedAsync(SubscriptionParameters subscriptionParameters, string userId)
+    {
+        var queryableSorted = FindAll().Include(y => y.Software).ThenInclude(y => y.Shop).Where(u => u.ShopUser.Id == userId).Sort(subscriptionParameters.OrderBy);
+
+        return await PagedList<Subscription>.CreateAsync(queryableSorted, subscriptionParameters.PageNumber, subscriptionParameters.PageSize);
+    }
+
     public async Task<PagedList<Subscription>> GetAllSubscriptionsCancelledPagedAsync(SubscriptionParameters subscriptionParameters)
     {
-        var queryable = FindByCondition(x => x.IsCanceled == true).Include(y => y.Software).ThenInclude(y => y.Shop);
-        var queryableSorted = _sortHelper.ApplySort(queryable, subscriptionParameters.OrderBy);
+        var queryableSorted = FindByCondition(x => x.IsCanceled == true).Include(y => y.Software).ThenInclude(y => y.Shop).Sort(subscriptionParameters.OrderBy);
 
         return await PagedList<Subscription>.CreateAsync(queryableSorted, subscriptionParameters.PageNumber,subscriptionParameters.PageSize);
     }

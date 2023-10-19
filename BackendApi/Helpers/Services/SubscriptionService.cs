@@ -6,12 +6,6 @@ namespace BackendApi.Helpers.Services;
 
 public class SubscriptionService : ISubscriptionService
 {
-    private ISoftwareRepository _softwareRepository;
-    public SubscriptionService(ISoftwareRepository softwareRepository)
-    {
-        _softwareRepository = softwareRepository;
-    }
-
     public async Task<Subscription> GetSubscriptionWithTerms(
         SubscriptionDtos.SubscriptionCreateDto subscriptionCreateDto,
         Subscription subscription, Software software)

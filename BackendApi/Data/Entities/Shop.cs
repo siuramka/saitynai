@@ -10,12 +10,12 @@ public partial class Shop
     public string ContactInformation { get; set; }
 }
 
-public partial class Shop
+public partial class Shop : IUserOwnedResource
 {
     public int Id { get; set; }
     public ICollection<Software> Softwares { get; set; }
     
-     // public int ShopUserId { get; set; }
-     // public ShopUser ShopUser { get; set; }
+     public string ShopUserId { get; set; }
+     public ShopUser ShopUser { get; set; }
 }
 

@@ -4,7 +4,7 @@ namespace BackendApi.Data.Repository.Contracts;
 
 public interface IRepository<T>
 {
-    Task CreateAsync(T entity);
-    Task UpdateAsync(T entity);
-    Task DeleteAsync(T entity);
+    void Create(T entity);
+    void Update(T entity);
+    void Delete(T entity);
 }

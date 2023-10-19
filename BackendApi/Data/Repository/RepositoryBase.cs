@@ -23,21 +23,18 @@ public abstract class RepositoryBase<T> : IRepository<T> where T : class
         return _shopDbContext.Set<T>().Where(expression).AsNoTracking();
     }
 
-    public async Task CreateAsync(T entity)
+    public void Create(T entity)
     {
         _shopDbContext.Set<T>().Add(entity);
-        await _shopDbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(T entity)
+    public void Update(T entity)
     {
         _shopDbContext.Set<T>().Update(entity);
-        await _shopDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(T entity)
+    public void Delete(T entity)
     {
         _shopDbContext.Set<T>().Remove(entity);
-        await _shopDbContext.SaveChangesAsync();
     }
 }

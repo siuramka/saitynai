@@ -1,33 +1,44 @@
-﻿using BackendApi.Data.Dtos.Shop;
+﻿using System.Linq.Dynamic.Core;
+using BackendApi.Data.Dtos.Shop;
 using BackendApi.Data.Dtos.Software;
 using BackendApi.Data.Entities;
 using BackendApi.Data.Repository.Contracts;
 using BackendApi.Helpers;
-using BackendApi.Helpers.Sorting;
+using BackendApi.Data.Repository.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi.Data.Repository;
 
 public class SoftwareRepository : RepositoryBase<Software>, ISoftwareRepository
 {
-    private ISortHelper<Software> _sortHelper;
-    public SoftwareRepository(ShopDbContext shopDbContext, ISortHelper<Software> sortHelper) : base(shopDbContext)
+    public SoftwareRepository(ShopDbContext shopDbContext) : base(shopDbContext)
     {
-        _sortHelper = sortHelper;
     }
     
     public async Task<PagedList<Software>> GetAllSoftwaresPagedAsync(SoftwareParameters parameters)
     {
-        var queryable = FindAll().OrderBy(software => software.Name).Include(y => y.Shop);
-        var queryableSorted = _sortHelper.ApplySort(queryable, parameters.OrderBy);
-
+        var queryableSorted = FindAll().OrderBy(software => software.Name).Include(y => y.Shop).Sort(parameters.OrderBy);
+        
         return await PagedList<Software>.CreateAsync(queryableSorted, parameters.PageNumber, parameters.PageSize);
     }
-    
+
+    /// <summary>
+    /// Get all softwares of user by shop id
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<PagedList<Software>> GetAllSoftwaresPagedAsync(SoftwareParameters parameters,  string userId)
+    {
+        var queryableSorted = FindAll().Include(y => y.Shop).ThenInclude(x => x.ShopUser)
+            .Where(y => y.Shop.ShopUser.Id == userId).Sort(parameters.OrderBy);
+        
+        return await PagedList<Software>.CreateAsync(queryableSorted, parameters.PageNumber, parameters.PageSize);
+    }
+
     public async Task<PagedList<Software>> GetAllSoftwaresPagedAsync(SoftwareParameters parameters, int shopId)
     {
-        var queryable = FindByCondition(software => software.ShopId == shopId).Include(y => y.Shop).OrderBy(software => software.Name);
-        var queryableSorted = _sortHelper.ApplySort(queryable, parameters.OrderBy);
+        var queryableSorted = FindByCondition(software => software.ShopId == shopId).Include(y => y.Shop).Sort(parameters.OrderBy);
 
         return await PagedList<Software>.CreateAsync(queryableSorted, parameters.PageNumber, parameters.PageSize);
     }
