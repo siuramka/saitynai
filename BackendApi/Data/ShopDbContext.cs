@@ -32,7 +32,7 @@ public class ShopDbContext : IdentityDbContext<ShopUser>
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(_configuration.GetValue<string>("ConnectionString:DockerSqlServer"));
+        optionsBuilder.UseNpgsql(_configuration.GetValue<string>("ConnectionString:DockerSqlServer"));
     }
     
     // public DbSet<ShopUser> ShopUsers { get; }
