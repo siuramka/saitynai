@@ -26,7 +26,7 @@ Vartotojas gali:
     • Matyti savo prenumeratas
         o Redaguoti prenumeratą
     ▪ Keisti terminą
-    ▪ Atšaukti prenumeratą
+    ▪ Istrinti prenumeratą
 
 Administratrius gali:
 • Matyti visas programas

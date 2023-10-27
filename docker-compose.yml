@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: t#es%tpSassword123
+      ACCEPT_EULA: Y
+    ports:
+      - 1433:1433
+
+  # nginx:
+  #   image: nginx
+  #   depends_on:
+  #     - api
+  #     # - frontend
+  #   restart: always
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - "3050:80"
+
+      
+  api:
+    container_name: api
+    build:
+      context: ./BackendApi
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver
+    environment:
+      ASPNETCORE_URLS: "http://+:5000"
+    ports:
+      - 5000:5000
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - api
+  #     - sqlserver
