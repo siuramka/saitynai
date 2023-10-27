@@ -1,16 +1,16 @@
 version: '3.8'
 services:
-  # nginx:
-  #   image: nginx
-  #   depends_on:
-  #     - api
-  #     # - frontend
-  #   restart: always
-  #   build:
-  #     context: ./nginx
-  #     dockerfile: Dockerfile.dev
-  #   ports:
-  #     - "3050:80"
+  nginx:
+    image: nginx
+    depends_on:
+      - api
+      # - frontend
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3050:80"
 
   api:
     container_name: api
