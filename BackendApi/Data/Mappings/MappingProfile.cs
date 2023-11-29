@@ -18,10 +18,11 @@ public class MappingProfile : Profile
         CreateMap<Software, SoftwareDtos.SoftwareDtoReturnAll>();
         CreateMap<SoftwareDtos.SoftwareCreateDto, Software>();
         CreateMap<SoftwareDtos.SoftwareUpdateDto, Software>();
-        
+
         CreateMap<Subscription, SubscriptionDtos.SubscriptionDtoReturn>();
         CreateMap<Subscription, SubscriptionDtos.SubscriptionDtoReturnAll>();
         CreateMap<SubscriptionDtos.SubscriptionCreateDto, Subscription>();
         CreateMap<SubscriptionDtos.SubscriptionUpdateDto, Subscription>();
+        CreateMap<Subscription, SubscriptionDtos.SubscriptionUpdateDto>();
     }
 }

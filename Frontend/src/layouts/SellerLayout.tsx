@@ -1,13 +1,28 @@
+import { Box, Container, Paper, Typography } from "@mui/material";
+import SellerHeader from "../components/Dashboard/Seller/Header/Header";
+
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const SellerLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div>
-      Seller Layout
-      {children}
-    </div>
+    <>
+      <SellerHeader />
+      <Container>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+          }}
+        >
+          {children}
+        </Box>
+      </Container>
+    </>
   );
 };
 

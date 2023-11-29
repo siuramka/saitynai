@@ -1,0 +1,89 @@
+import { ISoftware } from "../interfaces/Software/ISoftware";
+import { CreateSoftware } from "../interfaces/Software/CreateSoftware";
+import { EditSoftware } from "../interfaces/Software/EditSoftware";
+import api from "./api";
+
+type shopSoftwareParams = {
+  shopId: number;
+  softwareId: number;
+};
+
+export const getShopSoftware = async ({
+  shopId,
+  softwareId,
+}: shopSoftwareParams) => {
+  try {
+    const response = await api.get<ISoftware>(
+      `shops/${shopId}/softwares/${softwareId}`
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+type shopSoftwaresParams = {
+  shopId: number;
+};
+
+export const getShopSoftwares = async ({ shopId }: shopSoftwaresParams) => {
+  try {
+    const response = await api.get<ISoftware[]>(`shops/${shopId}/softwares`);
+    if (response.status === 200) {
+      return response.data;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+type createShopSoftwareParams = {
+  software: CreateSoftware;
+  shopId: number;
+};
+
+export const createShopSoftware = async ({
+  software,
+  shopId,
+}: createShopSoftwareParams) => {
+  try {
+    const response = await api.post<ISoftware>(
+      `shops/${shopId}/softwares`,
+      software
+    );
+    if (response.status == 201) {
+      return response.data;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+export type editSoftwareParams = {
+  shopId: number;
+  softwareId: number;
+  software: EditSoftware;
+};
+
+export const editSoftware = async ({
+  shopId,
+  softwareId,
+  software,
+}: editSoftwareParams) => {
+  try {
+    const response = await api.put<ISoftware>(
+      `shops/${shopId}/softwares/${softwareId}`,
+      software
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch {
+    return undefined;
+  }
+};

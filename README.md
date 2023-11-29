@@ -33,7 +33,6 @@ Administratrius gali:
     o Ištrinti programą
 • Matyti visas parduotuves
     o Ištrinti parduotuvę
-    o Redaguoti parduotuvę
 
 ## Sistems architektūra
 

@@ -3,34 +3,56 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../services/auth";
+import { login, registerBuyer, registerSeller } from "../../services/auth";
 import { AuthContext } from "../../utils/context/AuthContext";
+import {
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Radio,
+} from "@mui/material";
 
 
-export default function SignIn() {
+export default function SignUp() {
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState({ email: "", password: "" });
   const { setUserHandler } = React.useContext(AuthContext);
+  const [userType, setUserType] = React.useState("Buyer");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = () => {
+    switch (userType) {
+      case "Buyer":
+        return registerBuyer(formData);
+      case "Seller":
+        return registerSeller(formData);
+    }
+  };
+
+  const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const token = await login(formData);
+    if (formData.password !== confirmPassword) {
+      alert("Password and Confirm Password do not match");
+      return;
+    }
+
+    const token = await handleRegister();
     if (token) {
       setUserHandler(token);
       navigate("/");
     } else {
-      alert("Login failed");
+      alert("Registration failed");
     }
   };
 
@@ -46,17 +68,13 @@ export default function SignIn() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleLogin}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSignup} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
+              type="email"
               fullWidth
               id="email"
               label="Email Address"
@@ -76,6 +94,17 @@ export default function SignIn() {
               autoComplete="current-password"
               onChange={handleInputChange}
             />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              id="confirmPassword"
+              autoComplete="confirm-password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
 
             <Button
               type="submit"
@@ -83,15 +112,27 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign up
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link href="sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue={userType}
+                name="radio-buttons-group"
+                onChange={(e) => setUserType(e.target.value)}
+              >
+                <FormControlLabel
+                  value="Seller"
+                  control={<Radio />}
+                  label="Seller"
+                />
+                <FormControlLabel
+                  value="Buyer"
+                  control={<Radio />}
+                  label="Buyer"
+                />
+              </RadioGroup>
+            </FormControl>
           </Box>
         </Box>
       </Container>

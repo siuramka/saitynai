@@ -86,7 +86,7 @@ public class SubscriptionController : ControllerBaseWithUserId
         _repositoryManager.Subscriptions.Update(subscription);
         await _repositoryManager.SaveAsync();
 
-        var softwareDtoReturn = _mapper.Map<SubscriptionDtos.SubscriptionUpdateDto>(subscriptionUpdateDto);
+        var softwareDtoReturn = _mapper.Map<SubscriptionDtos.SubscriptionUpdateDto>(subscription);
 
         return Ok(softwareDtoReturn);
     }

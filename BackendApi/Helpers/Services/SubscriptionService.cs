@@ -12,13 +12,13 @@ public class SubscriptionService : ISubscriptionService
     {
         Subscription subscriptionWithTerms = subscription;
 
-        subscription.Start = DateTime.Now;
-        subscription.End = DateTime.Now.AddMonths(subscriptionCreateDto.TermInMonths);
+        subscription.Start = DateTime.Now.ToUniversalTime();
+        subscription.End = DateTime.Now.AddMonths(subscriptionCreateDto.TermInMonths).ToUniversalTime();
 
         subscriptionWithTerms.TotalPrice = software.PriceMonthly * subscriptionCreateDto.TermInMonths;
 
         subscriptionWithTerms.SoftwareId = software.Id;
-        
+
         return subscriptionWithTerms;
     }
 
@@ -26,12 +26,14 @@ public class SubscriptionService : ISubscriptionService
     {
         Subscription subscriptionWithTerms = subscription;
 
-        subscription.End = DateTime.Now.AddMonths(subscriptionUpdateDto.TermInMonths);
+        subscription.End = DateTime.Now.AddMonths(subscriptionUpdateDto.TermInMonths).ToUniversalTime();
 
         subscriptionWithTerms.TotalPrice += software.PriceMonthly * subscriptionUpdateDto.TermInMonths;
 
         subscriptionWithTerms.SoftwareId = software.Id;
-        
+
+        subscriptionWithTerms.TermInMonths = subscriptionUpdateDto.TermInMonths;
+
         return subscriptionWithTerms;
     }
 }

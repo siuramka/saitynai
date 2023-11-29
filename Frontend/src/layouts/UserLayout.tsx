@@ -1,13 +1,28 @@
+import { Box, Container } from "@mui/material";
+import UserHeader from "../components/Dashboard/User/Header/Header";
+
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const UserLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div>
-      User Layout
-      {children}
-    </div>
+    <>
+      <UserHeader />
+      <Container>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+          }}
+        >
+          {children}
+        </Box>
+      </Container>
+    </>
   );
 };
 

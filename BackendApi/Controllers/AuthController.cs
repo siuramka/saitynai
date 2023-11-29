@@ -36,15 +36,19 @@ public class AuthController : ControllerBaseWithUserId
         var newUser = new ShopUser
         {
             Email = registerUserDto.Email,
-            UserName = registerUserDto.Email        
+            UserName = registerUserDto.Email
         };
 
         var createUserResult = await _userManager.CreateAsync(newUser, registerUserDto.Password);
 
         if (createUserResult.Succeeded)
         {
-            await _userManager.AddToRoleAsync(newUser, ShopUserRoles.ShopUser);
-            return CreatedAtAction(nameof(RegisterUser), new AuthDtos.UserDto(newUser.Id, newUser.Email));
+            await _userManager.AddToRoleAsync(newUser, ShopUserRoles.ShopSeller);
+            var roles = await _userManager.GetRolesAsync(newUser);
+
+            var accessToken = _jwtTokenService.CreateAccessToken(newUser.Email, newUser.Id, roles);
+
+            return Ok(new AuthDtos.SuccessfulLoginDto(accessToken));
         }
 
         return BadRequest();
@@ -64,7 +68,7 @@ public class AuthController : ControllerBaseWithUserId
         var newUser = new ShopUser
         {
             Email = registerUserDto.Email,
-            UserName = registerUserDto.Email        
+            UserName = registerUserDto.Email
         };
 
         var createUserResult = await _userManager.CreateAsync(newUser, registerUserDto.Password);
@@ -72,7 +76,11 @@ public class AuthController : ControllerBaseWithUserId
         if (createUserResult.Succeeded)
         {
             await _userManager.AddToRoleAsync(newUser, ShopUserRoles.ShopSeller);
-            return CreatedAtAction(nameof(RegisterUser), new AuthDtos.UserDto(newUser.Id, newUser.Email));
+            var roles = await _userManager.GetRolesAsync(newUser);
+
+            var accessToken = _jwtTokenService.CreateAccessToken(newUser.Email, newUser.Id, roles);
+
+            return Ok(new AuthDtos.SuccessfulLoginDto(accessToken));
         }
 
         return BadRequest();
