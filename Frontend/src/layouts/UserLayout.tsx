@@ -14,7 +14,6 @@ const UserLayout: React.FC<LayoutProps> = ({ children }) => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
             justifyContent: "center",
             minHeight: "100vh",
           }}

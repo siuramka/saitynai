@@ -6,10 +6,11 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ISoftware } from "../../interfaces/Software/ISoftware";
 import { editSoftware } from "../../services/software";
 import { EditSoftware } from "../../interfaces/Software/EditSoftware";
+import { NotificationContext } from "../../utils/context/NotificationContext";
 
 type EditSoftwareModalParams = {
   handleRefresh: () => void;
@@ -23,6 +24,7 @@ const EditSoftwareModal = ({
   shopId,
 }: EditSoftwareModalParams) => {
   const [open, setOpen] = useState(false);
+  const { success } = useContext(NotificationContext);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -61,6 +63,7 @@ const EditSoftwareModal = ({
     if (editedSoftware) {
       handleRefresh();
       handleClose();
+      success("Successfully edited software!");
     }
   };
 

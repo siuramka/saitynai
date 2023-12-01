@@ -1,13 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ISoftware } from "../../interfaces/Software/ISoftware";
-import { getShopSoftwares } from "../../services/software";
+import {
+  deleteSoftware,
+  getAllSoftwares,
+  getShopSoftwares,
+} from "../../services/software";
 import {
   Grid,
   Card,
   CardActionArea,
   CardContent,
   Typography,
+  Button,
 } from "@mui/material";
 import CreateSoftwareModal from "./CreateSoftwareModal";
 import { AuthContext } from "../../utils/context/AuthContext";
@@ -27,10 +32,20 @@ const SoftwaresList = () => {
     setRefreshState((prevRefreshState) => !prevRefreshState);
   };
 
+  const handleDelete = (softwareId: number, shopId: number) => {
+    deleteSoftware({ shopId: shopId, softwareId: softwareId }).then(() => {
+      handleRefresh();
+    });
+  };
+
   useEffect(() => {
-    getShopSoftwares({ shopId: shopId }).then((softwaresData) =>
-      setSoftwares(softwaresData)
-    );
+    if (user && user.role === "Admin") {
+      getAllSoftwares().then((softwaresData) => setSoftwares(softwaresData));
+    } else {
+      getShopSoftwares({ shopId: shopId }).then((softwaresData) =>
+        setSoftwares(softwaresData)
+      );
+    }
   }, [shopId, refreshState]);
 
   return (
@@ -46,9 +61,9 @@ const SoftwaresList = () => {
             return (
               <Grid item xs={12} sm={6} md={4} lg={4} key={soft.id}>
                 <CardActionArea
-                  onClick={() =>
-                    navigate(`/dashboard/shops/${shopId}/softwares/${soft.id}`)
-                  }
+                  onClick={() => {
+                    navigate(`/dashboard/shops/${shopId}/softwares/${soft.id}`);
+                  }}
                 >
                   <Card sx={{ minWidth: 300, minHeight: 200, maxHeight: 200 }}>
                     <CardContent>
@@ -81,6 +96,11 @@ const SoftwaresList = () => {
                       shopId={shopId}
                     />
                   </>
+                )}
+                {user && user.role === "Admin" && (
+                  <Button onClick={() => handleDelete(soft.id, shopId)}>
+                    Delete
+                  </Button>
                 )}
               </Grid>
             );

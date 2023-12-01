@@ -22,6 +22,7 @@ Vartotojas gali:
     • Matyti visas parduotuves
     • Matyti parduotuvės parduodamas programas
     • Pasirinkti parduodamą program
+        o Įdėti/Išimti prekes į krepšelį
         o Prenumeruoti programą
     • Matyti savo prenumeratas
         o Redaguoti prenumeratą
@@ -36,9 +37,11 @@ Administratrius gali:
 
 ## Sistems architektūra
 
-    Backend - .NET 7, EF Cre, SQL Server
+    Backend - .NET 7, EF Core, PostgreSQL
 
-    Frntend – React Vite Typescript
+    Frontend – React Vite Typescript
+
+    Deployment - Docker Compose, NGINX, Ubuntu, Neon
     
 ## Deplyment diagrama
 

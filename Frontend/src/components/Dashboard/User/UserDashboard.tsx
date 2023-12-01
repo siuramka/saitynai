@@ -1,11 +1,10 @@
 import { useContext } from "react";
 import { AuthContext } from "../../../utils/context/AuthContext";
-import LayoutManager from "../../../layouts/LayoutManager";
 
 const UserDashboard = () => {
   const { user } = useContext(AuthContext);
 
-  return user && user.role && <div>User Dashboard</div>;
+  return user && user.role && <div>Hey user!</div>;
 };
 
 export default UserDashboard;

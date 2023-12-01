@@ -6,9 +6,10 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createShop } from "../../services/shop";
 import { CreateShop } from "../../interfaces/Shop/CreateShop";
+import { NotificationContext } from "../../utils/context/NotificationContext";
 
 type CreateShopModalParams = {
   handleRefresh: () => void;
@@ -18,6 +19,7 @@ const CreateShopModal = ({ handleRefresh }: CreateShopModalParams) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { success } = useContext(NotificationContext);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -47,6 +49,7 @@ const CreateShopModal = ({ handleRefresh }: CreateShopModalParams) => {
     if (createdShop) {
       handleRefresh();
       handleClose();
+      success("Successfully created shop!");
     }
   };
 

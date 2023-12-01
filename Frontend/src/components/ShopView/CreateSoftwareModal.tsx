@@ -7,9 +7,10 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createShopSoftware } from "../../services/software";
 import { CreateSoftware } from "../../interfaces/Software/CreateSoftware";
+import { NotificationContext } from "../../utils/context/NotificationContext";
 
 type CreateSoftwareModalParams = {
   handleRefresh: () => void;
@@ -20,6 +21,7 @@ const CreateSoftwareModal = ({
   shopId,
 }: CreateSoftwareModalParams) => {
   const [open, setOpen] = useState(false);
+  const { success } = useContext(NotificationContext);
 
   const [formData, setFormData] = useState({
     Name: "",
@@ -57,6 +59,7 @@ const CreateSoftwareModal = ({
     if (createdSoftware) {
       handleRefresh();
       handleClose();
+      success("Successfully created software!");
     }
   };
 

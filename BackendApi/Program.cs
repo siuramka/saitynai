@@ -39,13 +39,19 @@ builder.Services.AddAuthentication(options =>
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters.ValidAudience = builder.Configuration["JWT:ValidAudience"];
+        options.TokenValidationParameters.ValidateAudience = true;
         options.TokenValidationParameters.ValidIssuer = builder.Configuration["JWT:ValidIssuer"];
-        options.TokenValidationParameters.IssuerSigningKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]));
+        options.TokenValidationParameters.ValidateIssuer = true;
+        options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]));
+        options.TokenValidationParameters.ValidateIssuerSigningKey = true;
+        options.TokenValidationParameters.ValidateLifetime = true;
+        options.TokenValidationParameters.ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 };
+
+        // options.TokenValidationParameters.ClockSkew = TimeSpan.Zero; needed if exp time < 5 minutes
     });
 
 builder.Services.AddDbContext<ShopDbContext>();
-builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
+builder.Services.AddTransient<JwtTokenService>();
 
 builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -67,7 +73,9 @@ app.UseCors(options =>
 {
     options.AllowAnyOrigin();
     options.AllowAnyMethod();
-    options.AllowAnyHeader();
+    options.AllowAnyHeader()
+        .WithExposedHeaders("X-Pagination");
+
 });
 
 // Configure the HTTP request pipeline.

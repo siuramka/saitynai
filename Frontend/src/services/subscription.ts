@@ -66,3 +66,28 @@ export const createSubscription = async ({
     return undefined;
   }
 };
+
+type DeleteSubscriptionProps = {
+  subscriptionId: number;
+  shopId: number;
+  softwareId: number;
+};
+
+export const deleteSubscription = async ({
+  subscriptionId,
+  shopId,
+  softwareId,
+}: DeleteSubscriptionProps) => {
+  try {
+    const response = await api.delete<ISubscriptionCreated>(
+      `shops/${shopId}/softwares/${softwareId}/subscriptions/${subscriptionId}`
+    );
+
+    if (response.status === 204) {
+      return response.data;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+};

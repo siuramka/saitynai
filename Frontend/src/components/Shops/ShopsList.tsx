@@ -4,9 +4,6 @@ import {
   Typography,
   Grid,
   CardActionArea,
-  Button,
-  Box,
-  Modal,
 } from "@mui/material";
 import { IShop } from "../../interfaces/Shop/IShop";
 import { useContext, useEffect, useState } from "react";
@@ -29,12 +26,16 @@ const ShopsList = () => {
 
   useEffect(() => {
     getShops()
-      .then((shops) => setShops(shops))
+      .then((shops) => {
+        setShops(shops?.data);
+      })
       .catch(() => {});
   }, [refreshState]);
 
   return (
     <div>
+      <h1>Shops</h1>
+
       {user && user.role === "ShopSeller" && (
         <>
           <CreateShopModal handleRefresh={handleRefresh} />
@@ -46,10 +47,10 @@ const ShopsList = () => {
           shops.map((shop) => {
             return (
               <Grid item xs={12} sm={6} md={4} lg={4} key={shop.id}>
-                <Card sx={{ minWidth: 300, minHeight: 200, maxHeight: 200 }}>
-                  <CardActionArea
-                    onClick={() => navigate(`/dashboard/shops/${shop.id}`)}
-                  >
+                <CardActionArea
+                  onClick={() => navigate(`/dashboard/shops/${shop.id}`)}
+                >
+                  <Card sx={{ minWidth: 300, minHeight: 200, maxHeight: 200 }}>
                     <CardContent>
                       <Typography
                         sx={{ fontSize: 14 }}
@@ -66,17 +67,14 @@ const ShopsList = () => {
                         {shop.contactInformation}
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
-                  {/** TODO: single modal for multiple edits */}
-                  {user && user.role === "ShopSeller" && (
-                    <>
-                      <EditShopModal
-                        handleRefresh={handleRefresh}
-                        shop={shop}
-                      />
-                    </>
-                  )}
-                </Card>
+                  </Card>
+                </CardActionArea>
+                {/** TODO: single modal for multiple edits */}
+                {user && user.role === "ShopSeller" && (
+                  <>
+                    <EditShopModal handleRefresh={handleRefresh} shop={shop} />
+                  </>
+                )}
               </Grid>
             );
           })}

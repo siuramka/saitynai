@@ -32,6 +32,8 @@ public class SubscriptionService : ISubscriptionService
 
         subscriptionWithTerms.SoftwareId = software.Id;
 
+        subscriptionWithTerms.IsCanceled = subscriptionUpdateDto.IsCanceled;
+
         subscriptionWithTerms.TermInMonths = subscriptionUpdateDto.TermInMonths;
 
         return subscriptionWithTerms;

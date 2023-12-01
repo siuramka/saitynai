@@ -8,9 +8,10 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { useState } from "react";
-import { ISubscription } from "../../../interfaces/Subscription/ISubscription";
-import { editSubscription } from "../../../services/subscription";
+import { useContext, useState } from "react";
+import { ISubscription } from "../../interfaces/Subscription/ISubscription";
+import { editSubscription } from "../../services/subscription";
+import { NotificationContext } from "../../utils/context/NotificationContext";
 
 type EditSubscriptionModalParams = {
   handleRefresh: () => void;
@@ -23,11 +24,13 @@ const EditSubscriptionModal = ({
 }: EditSubscriptionModalParams) => {
   const [open, setOpen] = useState(false);
 
+  const { success } = useContext(NotificationContext);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const [formData, setFormData] = useState({
-    TermInMonths: subscription.termInMonths,
+    TermInMonths: 0,
     IsCanceled: subscription.isCanceled,
   });
 
@@ -68,6 +71,7 @@ const EditSubscriptionModal = ({
     if (editedSubscription) {
       handleRefresh();
       handleClose();
+      success("Successfully edited shop!");
     }
   };
 
@@ -114,7 +118,7 @@ const EditSubscriptionModal = ({
                   id="outlined-size-normal"
                   name="TermInMonths"
                   type="number"
-                  inputProps={{ min: 1, max: 24 }}
+                  inputProps={{ min: 0, max: 24 }}
                   label="Add months to subscription"
                   value={formData.TermInMonths}
                   onChange={handleInputChange}
@@ -128,7 +132,7 @@ const EditSubscriptionModal = ({
                 <FormControlLabel
                   control={
                     <Switch
-                      value={formData.IsCanceled}
+                      checked={formData.IsCanceled}
                       name="IsCanceled"
                       onChange={handleCanceledSwitchChange}
                     />

@@ -1,16 +1,19 @@
 import { Button, Chip, Grid, Paper, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getShopSoftware } from "../../services/software";
 import { ISoftware } from "../../interfaces/Software/ISoftware";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/CartSlice";
 import { ICartItem } from "../../interfaces/ICartItem";
+import { AuthContext } from "../../utils/context/AuthContext";
 
 const SoftwareView = () => {
   const { shopId, softwareId } = useParams();
   const softwareIdNum = Number(softwareId);
   const shopIdNum = Number(shopId);
+
+  const { user } = useContext(AuthContext);
 
   const [subscriptionTerm, setSubscriptionTerm] = useState<number>(1);
 
@@ -92,30 +95,31 @@ const SoftwareView = () => {
                   <h2>Price: {software.priceMonthly}$ per month</h2>
                 )}
               </Grid>
-
-              <Grid
-                item
-                md={12}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <TextField
-                  type="number"
-                  label="Months"
-                  value={subscriptionTerm}
-                  inputProps={{ min: 1, max: 24 }}
-                  onChange={handleSubscriptionTermChange}
-                />
-                <Button
-                  variant="outlined"
-                  color="success"
-                  onClick={() => handleAddToCart(software)}
+              {user && user.role === "ShopUser" && (
+                <Grid
+                  item
+                  md={12}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
                 >
-                  Add to cart
-                </Button>
-              </Grid>
+                  <TextField
+                    type="number"
+                    label="Months"
+                    value={subscriptionTerm}
+                    inputProps={{ min: 1, max: 24 }}
+                    onChange={handleSubscriptionTermChange}
+                  />
+                  <Button
+                    variant="outlined"
+                    color="success"
+                    onClick={() => handleAddToCart(software)}
+                  >
+                    Add to cart
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Paper>
         </Grid>

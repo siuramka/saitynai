@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import LoginPage from "./components/LoginPage/LoginPage";
 import { AuthContext } from "./utils/context/AuthContext";
 import RegisterPage from "./components/RegisterPage.tsx/RegisterPage";
@@ -9,33 +9,54 @@ import AdminDashboard from "./components/Dashboard/Admin/AdminDashboard";
 import UserDashboard from "./components/Dashboard/User/UserDashboard";
 import Layout from "./layouts/Layout";
 import LayoutManager from "./layouts/LayoutManager";
-import SoftwaresList from "./components/ShopView/SoftwaresList";
-import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import SoftwareView from "./components/SoftwareView/SoftwareView";
-import SubscriptionList from "./components/Dashboard/Subscriptions/SubscriptionList";
+import SubscriptionList from "./components/Subscriptions/SubscriptionList";
+import AdminShopsList from "./components/Shops/AdminShopsList";
+import ShopView from "./components/ShopView/ShopView";
+import AlertNotification from "./components/AlertNotification/AlertNotification";
+import Loader from "./components/Loader/Loader";
+import { LoaderContext } from "./utils/context/LoaderContext";
+import AdminSoftwaresList from "./components/ShopView/AdminSoftwaresList";
 
 function App() {
   const { user } = useContext(AuthContext);
+  const { setLoaderHandler } = useContext(LoaderContext);
+  const location = useLocation();
+
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
     },
   });
+
+  useEffect(() => {
+    setLoaderHandler(true);
+    setTimeout(() => {
+      setLoaderHandler(false);
+    }, 0);
+  }, [location]);
+
   return (
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         {user ? (
           <>
+            <Loader />
+            <AlertNotification />
             <LayoutManager role={user.role}>
               <Routes>
                 <Route path="/dashboard">
                   {user.role === "ShopUser" && (
                     <>
                       <Route index element={<UserDashboard />} />
-                      <Route path="subscriptions" element={<SubscriptionList />} />
+                      <Route
+                        path="subscriptions"
+                        element={<SubscriptionList />}
+                      />
                       <Route path="shops" element={<ShopsList />} />
-                      <Route path="shops/:id" element={<SoftwaresList />} />
+                      <Route path="shops/:id" element={<ShopView />} />
                       <Route
                         path="shops/:shopId/softwares/:softwareId"
                         element={<SoftwareView />}
@@ -46,16 +67,22 @@ function App() {
                     <>
                       <Route index element={<SellerDashboard />} />
                       <Route path="shops" element={<ShopsList />} />
-                      <Route path="shops/:id" element={<SoftwaresList />} />
-                      <Route path="shops/:id/edit" element={<> shops edit</>} />
+                      <Route path="shops/:id" element={<ShopView />} />
                       <Route
-                        path="softwares/:id/edit"
-                        element={<> softwares edit</>}
+                        path="shops/:shopId/softwares/:softwareId"
+                        element={<SoftwareView />}
                       />
                     </>
                   )}
                   {user.role === "Admin" && (
-                    <Route index element={<AdminDashboard />} />
+                    <>
+                      <Route index element={<AdminDashboard />} />
+                      <Route path="shops" element={<AdminShopsList />} />
+                      <Route
+                        path="softwares"
+                        element={<AdminSoftwaresList />}
+                      />
+                    </>
                   )}
                 </Route>
               </Routes>

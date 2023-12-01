@@ -8,6 +8,8 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import cartReducer from "./features/CartSlice.ts";
 import { Provider } from "react-redux";
+import { NotificationContextProvider } from "./utils/context/NotificationContext.tsx";
+import { LoaderContextProvider } from "./utils/context/LoaderContext.tsx";
 
 const store = configureStore({
   reducer: {
@@ -17,12 +19,16 @@ const store = configureStore({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <AuthContextProvider>
-      <React.StrictMode>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </React.StrictMode>
-    </AuthContextProvider>
+    <LoaderContextProvider>
+      <NotificationContextProvider>
+        <AuthContextProvider>
+          <React.StrictMode>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </React.StrictMode>
+        </AuthContextProvider>
+      </NotificationContextProvider>
+    </LoaderContextProvider>
   </Provider>
 );

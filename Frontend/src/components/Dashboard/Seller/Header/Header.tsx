@@ -16,7 +16,7 @@ import { useContext } from "react";
 
 const SellerHeader = () => {
   const navigate = useNavigate();
-  const { setUserSignout } = useContext(AuthContext);
+  const { setUserSignout, user } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -58,10 +58,15 @@ const SellerHeader = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            E-BOTS
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { md: "flex", sm: "flex", xs: "flex" },
+            }}
+          >
             <Button
               onClick={() => navigate("/dashboard/shops")}
               sx={{ my: 2, color: "white", display: "block" }}
@@ -69,7 +74,7 @@ const SellerHeader = () => {
               Shops
             </Button>
           </Box>
-
+          <Box sx={{ marginRight: "20px" }}>Hey, {user?.email}</Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

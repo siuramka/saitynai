@@ -1,4 +1,5 @@
-﻿using BackendApi.Auth.Handlers;
+﻿using BackendApi.Auth;
+using BackendApi.Auth.Handlers;
 using BackendApi.Auth.Models;
 using BackendApi.Data.Dtos.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -14,12 +15,14 @@ namespace BackendApi.Controllers;
 public class AuthController : ControllerBaseWithUserId
 {
     private readonly UserManager<ShopUser> _userManager;
-    private readonly IJwtTokenService _jwtTokenService;
+    private readonly JwtTokenService _jwtTokenService;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(UserManager<ShopUser> userManager, IJwtTokenService jwtTokenService)
+    public AuthController(UserManager<ShopUser> userManager, JwtTokenService jwtTokenService, IConfiguration configuration)
     {
         _userManager = userManager;
         _jwtTokenService = jwtTokenService;
+        _configuration = configuration;
     }
 
     [HttpPost]
@@ -109,5 +112,15 @@ public class AuthController : ControllerBaseWithUserId
         var accessToken = _jwtTokenService.CreateAccessToken(user.Email, user.Id, roles);
 
         return Ok(new AuthDtos.SuccessfulLoginDto(accessToken));
+    }
+
+    private async Task UpdateUsersRefreshTokenWithExpiration(ShopUser user)
+    {
+        _ = int.TryParse(_configuration["JWT:RefreshTokenValidityDays"], out int refreshTokenValidityDays);
+
+        user.RefreshToken = _jwtTokenService.CreateRefreshToken();
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenValidityDays);
+
+        await _userManager.UpdateAsync(user);
     }
 }

@@ -7,10 +7,11 @@ import {
   TextField,
   Chip,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CreateShopParams, editShop } from "../../services/shop";
 import { IShop } from "../../interfaces/Shop/IShop";
 import { EditShop } from "../../interfaces/Shop/EditShop";
+import { NotificationContext } from "../../utils/context/NotificationContext";
 
 type editShopModalParams = {
   handleRefresh: () => void;
@@ -19,6 +20,7 @@ type editShopModalParams = {
 
 const EditShopModal = ({ handleRefresh, shop }: editShopModalParams) => {
   const [open, setOpen] = useState(false);
+  const { success } = useContext(NotificationContext);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -51,6 +53,7 @@ const EditShopModal = ({ handleRefresh, shop }: editShopModalParams) => {
     if (editedShop) {
       handleRefresh();
       handleClose();
+      success("Successfully edited shop!");
     }
   };
 

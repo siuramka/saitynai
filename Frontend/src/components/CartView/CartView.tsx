@@ -5,14 +5,17 @@ import {
   clearCart,
 } from "../../features/CartSlice";
 import { Box, Button, Chip, IconButton, Paper, Stack } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { ICartItem } from "../../interfaces/ICartItem";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import { createSubscription } from "../../services/subscription";
+import { NotificationContext } from "../../utils/context/NotificationContext";
 
 const Cart = React.forwardRef((props, ref) => {
   const items = useSelector(selectItems);
   const dispatch = useDispatch();
+
+  const { success } = useContext(NotificationContext);
 
   const handleOrder = () => {
     const promises = items.map((item) => {
@@ -25,7 +28,7 @@ const Cart = React.forwardRef((props, ref) => {
 
     Promise.all(promises).then(() => {
       dispatch(clearCart());
-      alert("Order successful!");
+      success("Order successful!");
     });
   };
 
