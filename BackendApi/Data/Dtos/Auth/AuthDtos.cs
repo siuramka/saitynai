@@ -10,5 +10,6 @@ public class AuthDtos
 
     public record UserDto(string Id, string Email);
 
-    public record SuccessfulLoginDto(string AccessToken);
+    public record SuccessfulLoginDto(string AccessToken, string RefreshToken);
+    public record RefreshTokenDto(string AccessToken, string RefreshToken);
 }

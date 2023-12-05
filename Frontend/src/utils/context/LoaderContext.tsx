@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Props } from "./AuthContext";
+import { Props } from "./AuthContext.old";
 
 type LoaderContextType = {
   loading: boolean;

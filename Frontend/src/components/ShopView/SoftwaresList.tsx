@@ -15,12 +15,13 @@ import {
   Button,
 } from "@mui/material";
 import CreateSoftwareModal from "./CreateSoftwareModal";
-import { AuthContext } from "../../utils/context/AuthContext";
 import EditSoftwareModal from "./EditSoftwareModal";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../features/AuthSlice";
 
 const SoftwaresList = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const user = useSelector(selectUser);
 
   const { id } = useParams();
   const shopId = Number(id);

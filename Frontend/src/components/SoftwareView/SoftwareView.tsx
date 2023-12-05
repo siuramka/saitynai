@@ -3,17 +3,17 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getShopSoftware } from "../../services/software";
 import { ISoftware } from "../../interfaces/Software/ISoftware";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../features/CartSlice";
 import { ICartItem } from "../../interfaces/ICartItem";
-import { AuthContext } from "../../utils/context/AuthContext";
+import { selectUser } from "../../features/AuthSlice";
 
 const SoftwareView = () => {
   const { shopId, softwareId } = useParams();
   const softwareIdNum = Number(softwareId);
   const shopIdNum = Number(shopId);
 
-  const { user } = useContext(AuthContext);
+  const user = useSelector(selectUser);
 
   const [subscriptionTerm, setSubscriptionTerm] = useState<number>(1);
 

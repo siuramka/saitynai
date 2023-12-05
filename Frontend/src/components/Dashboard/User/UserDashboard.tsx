@@ -1,8 +1,8 @@
-import { useContext } from "react";
-import { AuthContext } from "../../../utils/context/AuthContext";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../features/AuthSlice";
 
 const UserDashboard = () => {
-  const { user } = useContext(AuthContext);
+  const user = useSelector(selectUser);
 
   return user && user.role && <div>Hey user!</div>;
 };

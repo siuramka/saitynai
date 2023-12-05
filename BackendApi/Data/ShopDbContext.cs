@@ -8,7 +8,7 @@ namespace BackendApi.Data;
 public class ShopDbContext : IdentityDbContext<ShopUser>
 {
     private readonly IConfiguration _configuration;
-    
+
     public ShopDbContext(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -19,22 +19,22 @@ public class ShopDbContext : IdentityDbContext<ShopUser>
             .HasOne(s => s.ShopUser)
             .WithMany(u => u.Subscriptions)
             .HasForeignKey(s => s.ShopUserId)
-            .OnDelete(DeleteBehavior.NoAction); 
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Software>()
             .HasOne(s => s.Shop)
             .WithMany(sh => sh.Softwares)
             .HasForeignKey(s => s.ShopId)
-            .OnDelete(DeleteBehavior.NoAction);
-        
+            .OnDelete(DeleteBehavior.Cascade);
+
         base.OnModelCreating(modelBuilder);
-        
+
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_configuration.GetValue<string>("ConnectionString:DockerSqlServer"));
     }
-    
+
     // public DbSet<ShopUser> ShopUsers { get; }
     public DbSet<Shop> Shops { get; }
     public DbSet<Software> Softwares { get; }

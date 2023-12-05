@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using BackendApi.Auth.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BackendApi.Auth;
@@ -19,12 +20,12 @@ public class JwtTokenService
         _issuer = configuration["JWT:ValidIssuer"];
         _audience = configuration["JWT:ValidAudience"];
     }
-    public string CreateAccessToken(string userName, string userId, IEnumerable<string> userRoles)
+    public string CreateAccessToken(string email, string userId, IEnumerable<string> userRoles)
     {
         var authClaims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, userId),
-                new(ClaimTypes.Name, userName),
+                new(ClaimTypes.Email, email),
+                new(CustomClaims.UserId, userId),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
@@ -65,7 +66,8 @@ public class JwtTokenService
             ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
             ValidateLifetime = false, // we don't care about the JWT's expiration here.
 
-            // ClockSkew = TimeSpan.Zero needed if exp time < 5 minutes
+            //needed if exp time < 5 minutes
+            // ClockSkew = TimeSpan.Zero
         };
 
         var principal = new JwtSecurityTokenHandler().ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);

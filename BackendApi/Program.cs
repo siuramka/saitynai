@@ -46,8 +46,8 @@ builder.Services.AddAuthentication(options =>
         options.TokenValidationParameters.ValidateIssuerSigningKey = true;
         options.TokenValidationParameters.ValidateLifetime = true;
         options.TokenValidationParameters.ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 };
-
-        // options.TokenValidationParameters.ClockSkew = TimeSpan.Zero; needed if exp time < 5 minutes
+        //needed if exp time < 5 minutes
+        // options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
     });
 
 builder.Services.AddDbContext<ShopDbContext>();

@@ -1,21 +1,69 @@
 import axios from "axios";
-
+import { refresh } from "./auth";
+import {
+  removeUserFromLocalStorage,
+  saveTokensToLocalStorage,
+} from "../features/SliceHelpers";
+import { AppDispatch, store } from "../app/store";
+import { removeUser } from "../features/AuthSlice";
 const baseURL = "http://localhost:5000/api/";
 
 const api = axios.create({
   baseURL,
 });
 
+// Add a response interceptor
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    const dispatch: AppDispatch = store.dispatch;
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const token = localStorage.getItem("token");
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (token && refreshToken) {
+          const newToken = await refresh({
+            accessToken: token,
+            refreshToken: refreshToken,
+          });
+
+          if (newToken) {
+            saveTokensToLocalStorage(
+              newToken.accessToken,
+              newToken.refreshToken
+            );
+          } else {
+            removeUserFromLocalStorage();
+            dispatch(removeUser());
+          }
+
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        }
+        return api(originalRequest);
+      } catch (refreshError) {
+        throw refreshError;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 api.interceptors.request.use(
-  function (config) {
-    const token = localStorage.getItem("token"); // Assuming you store your token in localStorage
+  (config) => {
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  function (error) {
-    console.log("failed token from storatge");
+  (error) => {
     return Promise.reject(error);
   }
 );

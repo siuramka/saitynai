@@ -7,16 +7,19 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { login } from "../../services/auth";
-import { AuthContext } from "../../utils/context/AuthContext";
+import { useDispatch } from "react-redux";
+import { User, saveUser } from "../../features/AuthSlice";
+import {
+  getUserFromTokens,
+  saveTokensToLocalStorage,
+} from "../../features/SliceHelpers";
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = React.useState({ email: "", password: "" });
-  const { setUserHandler } = React.useContext(AuthContext);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -24,9 +27,14 @@ export default function SignIn() {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const token = await login(formData);
-    if (token) {
-      setUserHandler(token);
+    const tokens = await login(formData);
+    if (tokens) {
+      saveTokensToLocalStorage(tokens.accessToken, tokens.refreshToken);
+      dispatch(
+        saveUser({
+          user: getUserFromTokens(tokens.accessToken, tokens.refreshToken),
+        })
+      );
       navigate("/dashboard");
     } else {
       alert("Login failed");

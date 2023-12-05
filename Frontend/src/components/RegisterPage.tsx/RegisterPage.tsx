@@ -2,26 +2,26 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { login, registerBuyer, registerSeller } from "../../services/auth";
-import { AuthContext } from "../../utils/context/AuthContext";
+import { registerBuyer, registerSeller } from "../../services/auth";
 import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  FormLabel,
   Radio,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { User, saveUser } from "../../features/AuthSlice";
+import { getUserFromTokens } from "../../features/SliceHelpers";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = React.useState({ email: "", password: "" });
-  const { setUserHandler } = React.useContext(AuthContext);
   const [userType, setUserType] = React.useState("Buyer");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
@@ -46,9 +46,13 @@ export default function SignUp() {
       return;
     }
 
-    const token = await handleRegister();
-    if (token) {
-      setUserHandler(token);
+    const tokens = await handleRegister();
+    if (tokens) {
+      const user: User = getUserFromTokens(
+        tokens.accessToken,
+        tokens.refreshToken
+      );
+      dispatch(saveUser({ user: user }));
       navigate("/");
     } else {
       alert("Registration failed");

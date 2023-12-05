@@ -11,12 +11,14 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../utils/context/AuthContext";
 import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser, selectUser } from "../../../../features/AuthSlice";
 
 const SellerHeader = () => {
   const navigate = useNavigate();
-  const { setUserSignout, user } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -97,7 +99,7 @@ const SellerHeader = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={() => setUserSignout()}>
+              <MenuItem onClick={() => dispatch(removeUser())}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
             </Menu>

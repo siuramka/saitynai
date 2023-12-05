@@ -9,13 +9,14 @@ import { IShop } from "../../interfaces/Shop/IShop";
 import { useContext, useEffect, useState } from "react";
 import { getShops } from "../../services/shop";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../utils/context/AuthContext";
 import CreateShopModal from "./CreateShopModal";
 import EditShopModal from "./EditShopModal";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../features/AuthSlice";
 
 const ShopsList = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const user = useSelector(selectUser);
 
   const [shops, setShops] = useState<IShop[]>();
   const [refreshState, setRefreshState] = useState(false);

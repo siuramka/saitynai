@@ -1,5 +1,28 @@
 import api from "./api";
 
+type refreshParams = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export const refresh = async ({ accessToken, refreshToken }: refreshParams) => {
+  try {
+    const response = await api.post("auth/refresh", {
+      accessToken,
+      refreshToken,
+    });
+
+    if (response.status === 200) {
+      const responseData: LoginResponse = response.data;
+      return responseData;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+};
+
 type authParams = {
   email: string;
   password: string;
@@ -10,7 +33,8 @@ export const login = async ({ email, password }: authParams) => {
     const response = await api.post("auth/login", { email, password });
 
     if (response.status === 200) {
-      return response.data.accessToken;
+      const responseData: LoginResponse = response.data;
+      return responseData;
     }
 
     return null;
@@ -22,12 +46,13 @@ export const login = async ({ email, password }: authParams) => {
 export const registerBuyer = async ({
   email,
   password,
-}: authParams): Promise<string | null> => {
+}: authParams): Promise<LoginResponse | null> => {
   try {
     const response = await api.post("auth/register/user", { email, password });
 
     if (response.status === 200) {
-      return response.data.accessToken;
+      const responseData: LoginResponse = response.data;
+      return responseData;
     }
 
     return null;
@@ -39,7 +64,7 @@ export const registerBuyer = async ({
 export const registerSeller = async ({
   email,
   password,
-}: authParams): Promise<string | undefined> => {
+}: authParams): Promise<LoginResponse | undefined> => {
   try {
     const response = await api.post("auth/register/seller", {
       email,
@@ -47,7 +72,8 @@ export const registerSeller = async ({
     });
 
     if (response.status === 200) {
-      return response.data.accessToken;
+      const responseData: LoginResponse = response.data;
+      return responseData;
     }
 
     return undefined;

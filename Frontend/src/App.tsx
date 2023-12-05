@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import LoginPage from "./components/LoginPage/LoginPage";
-import { AuthContext } from "./utils/context/AuthContext";
 import RegisterPage from "./components/RegisterPage.tsx/RegisterPage";
 import ShopsList from "./components/Shops/ShopsList";
 import SellerDashboard from "./components/Dashboard/Seller/SellerDashboard";
@@ -18,9 +17,11 @@ import AlertNotification from "./components/AlertNotification/AlertNotification"
 import Loader from "./components/Loader/Loader";
 import { LoaderContext } from "./utils/context/LoaderContext";
 import AdminSoftwaresList from "./components/ShopView/AdminSoftwaresList";
+import { useSelector } from "react-redux";
+import { selectUser } from "./features/AuthSlice";
 
 function App() {
-  const { user } = useContext(AuthContext);
+  const user = useSelector(selectUser);
   const { setLoaderHandler } = useContext(LoaderContext);
   const location = useLocation();
 

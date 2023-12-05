@@ -11,7 +11,6 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../utils/context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
@@ -23,15 +22,18 @@ import {
   Fade,
   Popper,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Cart from "../../../CartView/CartView";
 import CartView from "../../../CartView/CartView";
 import { selectItemsCountCount } from "../../../../features/CartSlice";
+import { removeUser, selectUser } from "../../../../features/AuthSlice";
 
 const UserHeader = () => {
   const navigate = useNavigate();
-  const { setUserSignout, user } = useContext(AuthContext);
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+  
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -157,7 +159,7 @@ const UserHeader = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={() => setUserSignout()}>
+              <MenuItem onClick={() => dispatch(removeUser())}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
             </Menu>
