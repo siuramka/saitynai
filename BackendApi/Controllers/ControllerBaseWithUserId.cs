@@ -6,6 +6,6 @@ namespace BackendApi.Controllers;
 
 public class ControllerBaseWithUserId : ControllerBase
 {
-    public string? UserId => User.FindFirstValue(CustomClaims.UserId);
-    public bool UserHasRole(string roleToCheck) => User.HasClaim(ClaimTypes.Role, roleToCheck);
+    protected string? UserId => User.FindFirstValue(CustomClaims.UserId);
+    protected bool UserHasRole(string roleToCheck) => User.HasClaim(ClaimTypes.Role, roleToCheck);
 }
