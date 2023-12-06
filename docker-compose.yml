@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+
+  nginx:
+    image: nginx
+    depends_on:
+      - frontend
+      - backend
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "3050:80"
+
+  backend:
+    build:
+      context: ./BackendApi
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: "http://+:5000"
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
