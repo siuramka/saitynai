@@ -6,7 +6,8 @@ import {
 } from "../features/SliceHelpers";
 import { AppDispatch, store } from "../app/store";
 import { removeUser } from "../features/AuthSlice";
-const baseURL = "http://localhost:5000/api/";
+// const baseURL = "http://localhost:5000/api/";
+const baseURL = "api/";
 
 const api = axios.create({
   baseURL,
