@@ -83,7 +83,7 @@ const SoftwaresList = () => {
                         {soft.priceMonthly === 0 ? (
                           <>Free</>
                         ) : (
-                          soft.priceMonthly
+                          <>soft.priceMonthly$</>
                         )}
                       </Typography>
                     </CardContent>

@@ -50,7 +50,10 @@ Administratrius gali:
 
 # BackendApi
 
+### - Register as user
+
 ### /api/auth/register/user
+
 
 #### POST
 ##### Responses
@@ -58,10 +61,13 @@ Administratrius gali:
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 400 | Success |
 
-```http
-GET /api/auth/register/user
 ```
+auth/register/user
+```
+
+#### Example request/response
 
 Parameters
 ```
@@ -79,6 +85,7 @@ Response
     "refreshToken": "SKvEkgs8vJWLrGhlhVdl2E7tSbnaBknC2TqE+fEZNhE="
 }
 ```
+### - Register as seller
 
 ### /api/auth/register/seller
 
@@ -89,6 +96,8 @@ Response
 | ---- | ----------- |
 | 200 | Success |
 | 400 | Bad request |
+
+#### Example request/response
 
 ```http
 GET /api/auth/register/seller
@@ -113,15 +122,20 @@ Response
 
 ### /api/auth/login
 
+### - Login
+
 #### POST
+
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 400 | Bad request |
 
-```http
-GET /api/auth/login
+#### Example request/response
+```
+auth/login
 ```
 
 Parameters
@@ -143,17 +157,24 @@ Response
 
 ### /api/auth/refresh
 
+### - Refresh jwt token
+
 #### POST
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 400 | Bad request |
 
 #
-```http
-GET /api/auth/refresh
+
 ```
+POST
+auth/refresh
+```
+
+#### Example request/response
 
 Parameters
 ```
@@ -166,6 +187,7 @@ Parameters
 Response
 
 ```
+200
 {
     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZ2FzZzExQGdtYWlsLmNvbSIsInVzZXJJZCI6ImJkOWMxMTVkLTYyODctNDZhYS1iYjMzLTJhZjRlNTc5ZDQ2MyIsImp0aSI6IjMyZTBjMDU4LTZlNzktNDM4OC1hM2Y0LTM0YjFlMjhlZGVmZiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlNob3BTZWxsZXIiLCJleHAiOjE3MDE4ODUyNDksImlzcyI6Im5hc2EuZ292IiwiYXVkIjoiVHJ1c3RlZENsaWVudCJ9.No_KvIXzE5VgyLCPuAkzumRBeE-a_aGUEcE1NZtD620",
     "refreshToken": "vthqUVZ3y4gBO5LXrRPn7P4juYVXnDaLn0HRejxeWkc="
@@ -176,6 +198,10 @@ Response
 
 ### /api/shops
 
+### - Get all shops / Get all seller shops
+
+### [Authorize]: Seller / User / Admin
+
 #### GET
 ##### Parameters
 
@@ -185,8 +211,6 @@ Response
 | PageSize | query |  | No | integer |
 | OrderBy | query |  | No | string |
 
-### Authorization
-### * Admin, User, Seller
 
 ##### Responses
 
@@ -194,6 +218,7 @@ Response
 | ---- | ----------- |
 | 200 | Success |
 
+#### Example response
 ```
 [
   {
@@ -204,14 +229,15 @@ Response
   }
 ]
 ```
-
+### - Create shop
+### [Authorize]: Seller
 #### POST
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
 | 201 | Created |
-
+#### Example request/response
 ```
 {
   "name": "PC Shop",
@@ -220,6 +246,7 @@ Response
 }
 ```
 
+Response
 ```
 {
     "id": 3,
@@ -229,8 +256,8 @@ Response
 }
 ```
 
-
-
+### - Get shop by id
+### [Authorize]: Seller / User / Admin
 ### /api/shops/{id}
 
 #### GET
@@ -247,7 +274,7 @@ Response
 | 200 | Success |
 | 404 | Not Found |
 
-
+#### Example request/response
 /api/shops/3
 ```
 {
@@ -258,7 +285,8 @@ Response
 }
 ```
 
-#### Example
+### - Update shop
+### [Authorize]: Seller
 
 #### PUT
 ##### Parameters
@@ -272,7 +300,9 @@ Response
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
-
+| 400 | Bad request |
+| 404 | Not Found |
+#### Example request/response
 /api/shops/3
 ```
 {
@@ -292,6 +322,9 @@ Response
 }
 ```
 
+### - Delete shop
+### [Authorize]:  Admin
+
 #### DELETE
 ##### Parameters
 
@@ -305,14 +338,16 @@ Response
 | ---- | ----------- |
 | 204 | No Content |
 | 404 | Not found |
-
-
+#### Example request/response
 /api/shops/4
 
 ```
 204
 ```
 
+### - Get softwares of shop
+
+### [Authorize]: Seller / User
 
 ### /api/shops/{shopId}/softwares
 
@@ -325,11 +360,12 @@ Response
 | PageSize | query |  | No | integer |
 | OrderBy | query |  | No | string |
 | shopId | path |  | Yes | integer |
-
+#### Example request/response
 api/shops/4/softwares/3
 
 ```
-api/shops/4/softwares/3 200
+200
+api/shops/4/softwares/3 
 
 {
     "id": 3,
@@ -347,6 +383,12 @@ api/shops/4/softwares/3 200
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 404 | Not Found |
+
+### - Create a software for shop
+
+### [Authorize]: Seller / User / Admin
+
 
 #### POST
 ##### Parameters
@@ -360,8 +402,8 @@ api/shops/4/softwares/3 200
 | Code | Description |
 | ---- | ----------- |
 | 201 | Success |
-| 404 | Success |
-
+| 404 | Not Found |
+#### Example request/response
 ```
 {
   "Name": "Windows 10",
@@ -385,7 +427,9 @@ api/shops/4/softwares/3 200
 }
 ```
 
+### - Get a software of shop
 
+### [Authorize]: Seller / User
 
 ### /api/shops/{shopId}/softwares/{softwareId}
 
@@ -402,8 +446,9 @@ api/shops/4/softwares/3 200
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 404 | Not found |
 
-
+#### Example request/response
 ```
 GET shops/4/softwares/3 
 
@@ -418,6 +463,9 @@ GET shops/4/softwares/3
 }
 ```
 
+### - Update a software of shop
+### [Authorize]: Seller
+
 #### PUT
 ##### Parameters
 
@@ -431,7 +479,10 @@ GET shops/4/softwares/3
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 400 | Bad Request |
+| 404 | Not Found |
 
+#### Example request/response
 ```
 {
   "Name": "Windows 10 Updated",
@@ -453,6 +504,8 @@ GET shops/4/softwares/3
 }
 ```
 
+### - Delete a software of shop
+### [Authorize]: Admin
 #### DELETE
 ##### Parameters
 
@@ -466,7 +519,8 @@ GET shops/4/softwares/3
 | Code | Description |
 | ---- | ----------- |
 | 204 | No Content |
-
+| 404 | Not Found |
+#### Example request/response
 
 shops/4/softwares/3
 
@@ -474,6 +528,8 @@ shops/4/softwares/3
 204
 ```
 
+### - Get a subscription of software
+### [Authorize]: User / Admin
 
 ### /api/shops/{shopId}/softwares/{softwareId}/subscriptions/{subscriptionId}
 
@@ -491,6 +547,26 @@ shops/4/softwares/3
 | Code | Description |
 | ---- | ----------- |
 | 200 | Success |
+| 404 | Not Found |
+#### Example request/response
+```
+200
+/api/shops/4/softwares/5/subscriptions/9
+```
+
+```
+{
+  "id": 9,
+  "termInMonths": 1,
+  "start": "2023-12-10T12:00:41.782468Z",
+  "end": "2024-01-10T12:02:37.023134Z",
+  "totalPrice": 330,
+  "isCanceled": false
+}
+```
+
+### - Update a subscription of software
+### [Authorize]: User / Admin
 
 #### PUT
 ##### Parameters
@@ -507,6 +583,8 @@ shops/4/softwares/3
 | ---- | ----------- |
 | 200 | Success |
 
+#### Example request/response
+
 ```
 shops/4/softwares/4/subscriptions/3
 
@@ -519,13 +597,15 @@ shops/4/softwares/4/subscriptions/3
 
 
 ```
+200
 {
     "termInMonths":6,
     "isCanceled":true
 }
 ```
 
-
+### - Delete a subscription of software
+### [Authorize]: User / Admin
 
 #### DELETE
 ##### Parameters
@@ -540,8 +620,11 @@ shops/4/softwares/4/subscriptions/3
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | Success |
+| 204 | Success |
+| 404 | Not Found |
+| 400 | Bad Request |
 
+#### Example request/response
 
 ```
 shops/4/softwares/4/subscriptions/3
@@ -553,6 +636,9 @@ shops/4/softwares/4/subscriptions/3
 ```
 
 ### /api/shops/{shopId}/softwares/{softwareId}/subscriptions
+### [Authorize]: User
+
+### -  Creates a subscription for a software of specific shop
 
 #### POST
 ##### Parameters
@@ -563,6 +649,15 @@ shops/4/softwares/4/subscriptions/3
 | shopId | path |  | Yes | integer |
 
 
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 204 | Success |
+| 404 | Not Found |
+| 400 | Bad Request |
+
+### Example request/response
 
 shops/4/softwares/4/subscriptions
 
@@ -574,6 +669,7 @@ shops/4/softwares/4/subscriptions
 
 
 ```
+200
 {
     "id": 3,
     "termInMonths": 1,
@@ -583,10 +679,3 @@ shops/4/softwares/4/subscriptions
     "isCanceled": false
 }
 ```
-
-##### Responses
-
-| Code | Description |
-| ---- | ----------- |
-| 200 | Success |
-
